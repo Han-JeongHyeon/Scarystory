@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="330dp"
+    android:layout_height="170dp"
+    android:orientation="vertical"
+    android:background="@color/black">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:gravity="center"
+        android:text="새로운 버전이 나왔습니다"
+        android:textColor="@color/white"
+        android:background="@drawable/recycleview"
+        android:fontFamily="@font/kccimkwontaek"
+        android:textSize="23dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:fontFamily="@font/kccimkwontaek"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/finish_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:fontFamily="@font/kccimkwontaek"
+            android:background="@drawable/recycleview"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="업데이트 하기"
+            />
+
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/kccimkwontaek"/>
+
+        <Button
+            android:id="@+id/continue_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/recycleview"
+            android:fontFamily="@font/kccimkwontaek"
+            android:gravity="center"
+            android:text="아니요"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</LinearLayout>

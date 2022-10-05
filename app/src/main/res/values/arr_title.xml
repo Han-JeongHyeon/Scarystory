@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="sec">300</integer>
+
+    <string-array name="name">
+
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+            <!--0-->
+        <!--0-->
+        <item>텅빈 우물</item>
+        <item>지하도</item>
+        <item>신</item>
+        <item>편의점</item>
+        <item>생일 파티</item>
+        <item>당신의 소원은?</item>
+        <item>이상형</item>
+        <item>사이비 종교</item>
+        <item>국</item>
+        <item>붉은 방</item>
+        <!--10-->
+
+        <item>다음날</item>
+        <item>당신이 모르는 누군가</item>
+        <item>바자회</item>
+        <item>행방불명</item>
+        <item>캠코더</item>
+        <item>노인과 게임</item>
+        <item>비오는 날</item>
+        <item>불청객</item>
+        <item>식사</item>
+        <item>뺑소니</item>
+        <!--20-->
+
+        <item>사이코</item>
+        <item>벨</item>
+        <item>거울</item>
+        <item>지붕</item>
+        <item>편지</item>
+        <item>비디오</item>
+        <item>대문</item>
+        <item>엄마의 부적</item>
+        <item>할머니와 천국</item>
+        <item>남자친구</item>
+        <!--30-->
+
+        <item>울어요</item>
+        <item>저주의 책</item>
+        <item>다음 모퉁이</item>
+        <item>고민</item>
+        <item>과거와 미래</item>
+        <item>집안에 심령현상</item>
+        <item>술래잡기하던 친구</item>
+        <item>오른팔과 왼팔</item>
+        <item>당신은 왜 죽었나?</item>
+        <item>창문</item>
+        <!--40-->
+
+        <item>양팔</item>
+        <item>흐릿한 형태</item>
+        <item>엘리베이터 표시</item>
+        <item>3가지 선물</item>
+        <item>마을 어귀에 있던 흉가</item>
+        <item>지하철을 타지 마세요</item>
+        <item>망우리</item>
+        <item>타임캡슐</item>
+        <item>벽 안에 시체</item>
+        <item>O, X 표시</item>
+        <!--50-->
+
+        <item>2층 화장실</item>
+        <item>반성문</item>
+        <item>콘택트렌즈</item>
+        <item>별로 웃기지도 않은 이야기</item>
+        <item>점쟁이</item>
+        <item>세 명의 부인</item>
+        <item>안티팬</item>
+        <item>캡슐</item>
+        <item>갓난 아기</item>
+        <item>사진을 찍은 날짜</item>
+         <!--60-->
+
+        <item>청산가리 수박</item>
+        <item>무슨 소원이든 말해봐</item>
+        <item>변기커버</item>
+        <item>박수소리</item>
+        <item>컴퓨터 게임</item>
+        <item>칼에 찔리는 사고</item>
+        <item>럭비</item>
+        <item>강도</item>
+        <item>꿈</item>
+        <item>다친 불쌍한 동물들에게 기부를</item>
+        <!--70-->
+
+        <item>아파트 22층</item>
+        <item>어린이보험</item>
+        <item>Welcome To AIDS!</item>
+        <item>내가 붙잡았어</item>
+        <item>그럼 혹시</item>
+        <item>철수와 영희</item>
+        <item>갈 데가 없는 친구</item>
+        <item>【악마 소환】</item>
+        <item>여자귀신</item>
+        <item>동그라미</item>
+        <!--80-->
+
+        <item>아팠니?</item>
+        <item>트럭 운전기사</item>
+        <item>왕따시킨 주범</item>
+        <item>천장 판자</item>
+        <item>명령</item>
+        <item>도망칠 수 있을 거라고 생각했어?</item>
+        <item>생일 선물</item>
+        <item>아이고..우리 집이 아닌가보네</item>
+        <item>화장실</item>
+        <item>TV속 얼굴</item>
+        <!--90-->
+
+        <item>요리</item>
+        <item>유미</item>
+        <item>흙장난</item>
+        <item>시멘트 포대</item>
+        <item>그러면 이제 갈까?</item>
+        <item>버스사고</item>
+        <item>전학생의 누나</item>
+        <item>낙석 사고</item>
+        <item>누군가 보고 있다.</item>
+        <item>마지막 생일</item>
+        <!--100-->
+
+        <item>생명줄</item>
+        <item>잠자는 미녀</item>
+        <item>비상계단</item>
+        <item>일란성 쌍둥이</item>
+        <item>유령열차</item>
+        <item>경찰</item>
+        <item>금덩이</item>
+        <item>한 택배</item>
+        <item>이주현</item>
+        <item>부관(조언자)</item>
+        <!--110-->
+
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        &lt;!&ndash;120&ndash;&gt;-->
+
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        &lt;!&ndash;130&ndash;&gt;-->
+
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        <item></item>-->
+<!--        &lt;!&ndash;140&ndash;&gt;-->
+
+    </string-array>
+
+</resources>

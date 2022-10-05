@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/Title_bar"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="#FA1C1C1C"
+    android:theme="@style/Theme.HorrorKotlin"
+    app:titleCentered="true"
+    app:titleTextColor="@color/black"
+    android:elevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="#252525">
+
+        <Button
+            android:id="@+id/beck_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="1dp"
+            android:background="@drawable/back_btn" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:fontFamily="@font/bneuljiro10"
+            android:textSize="25dp"
+            android:text=""/>
+
+        <Button
+            android:id="@+id/all"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:textColor="#FFFFFF"
+            android:text="전체"
+            android:textSize="16dp"
+            android:layout_gravity="center"
+            android:background="@drawable/stroke_btn_w"
+            android:fontFamily="@font/bm"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/unread"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="#7A7A7A"
+            android:text="안본글"
+            android:textSize="16dp"
+            android:layout_gravity="center"
+            android:background="@drawable/stroke_btn"
+            android:fontFamily="@font/bm"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/bookmark"
+            android:layout_width="54dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:textColor="#7A7A7A"
+            android:background="@drawable/stroke_btn"
+            android:fontFamily="@font/bm"
+            android:text="즐겨찾기"
+            android:textSize="16dp"
+            android:visibility="gone"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/drawer_btn"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_baseline_dehaze_24"
+            android:fontFamily="@font/bm"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.Toolbar>

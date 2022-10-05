@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/story_background"
+    android:orientation="vertical"
+    tools:context=".Activity.StoryActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <include
+            layout="@layout/story_bar"
+            android:id="@+id/Story_bar"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:id="@+id/scroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/Layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginRight="10dp"
+                        android:autoSizeMaxTextSize="100dp"
+                        android:autoSizeMinTextSize="10dp"
+                        android:autoSizeStepGranularity="2dp"
+                        android:autoSizeTextType="uniform"
+                        android:fontFamily="@font/jsarirang"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="지나갈 수 없는 길의 남자아이"
+                        android:textColor="#870E0E"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/story"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="40dp"
+                        android:fontFamily="@font/yoondokrip"
+                        android:text="외할아버지는 내가 태어나자마자 돌아가셨다는 이야기를 어머니에게서 전해들었었다."
+                        android:textColor="#C3C3C3"
+                        android:textSize="22dp" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/right_btn"
+            android:layout_width="35dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center|right"
+            android:background="@drawable/right_btn" />
+
+        <Button
+            android:id="@+id/left_btn"
+            android:layout_width="35dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center|left"
+            android:background="@drawable/left_btn" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#171717"
+            android:layout_gravity="bottom">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/inter_btn"
+                android:layout_width="300dp"
+                android:layout_height="30dp"
+                android:background="@drawable/interpretation"
+                android:layout_marginTop="5dp"
+                android:text="해석"
+                android:textColor="#FFFFFF"
+                android:textSize="23dp"
+                android:fontFamily="@font/bneuljiro10"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/inter_layout"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:background="#171717"
+            android:layout_gravity="bottom"
+            android:visibility="invisible"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+                <Button
+                    android:id="@+id/Inter_btn"
+                    android:layout_width="300dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/interpretation"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="5dp"
+                    android:text="해석"
+                    android:textColor="#FFFFFF"
+                    android:textSize="23dp"
+                    android:fontFamily="@font/bneuljiro10"
+                    android:gravity="center"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/inter_text"
+                android:padding="10dp"
+                android:lineSpacingExtra ="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:text=""
+                android:textColor="#FFFFFF"
+                android:textSize="15dp"
+                android:fontFamily="@font/bneuljiro10"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/text_Option"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/option"
+            android:visibility="invisible"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:text="크기 설정"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/bm"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/seekbar"
+                    android:layout_width="380dp"
+                    android:layout_height="25dp"
+                    android:progress="22"
+                    android:min="10"
+                    android:max="40"/>
+
+                <EditText
+                    android:id="@+id/checkSeek"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#00ff0000"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="폰트 설정"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/bm"/>
+
+            <!--            <HorizontalScrollView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="15dp">-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/font1"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/stroke_btn"
+                    android:fontFamily="@font/bm"
+                    android:text="독립체"
+                    android:textColor="#7A7A7A" />
+
+                <Button
+                    android:id="@+id/font2"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="23dp"
+                    android:background="@drawable/stroke_btn"
+                    android:fontFamily="@font/bm"
+                    android:text="을지로체"
+                    android:textColor="#7A7A7A" />
+
+                <Button
+                    android:id="@+id/font3"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="23dp"
+                    android:background="@drawable/stroke_btn"
+                    android:fontFamily="@font/bm"
+                    android:text="비트로체"
+                    android:textColor="#7A7A7A" />
+
+                <Button
+                    android:id="@+id/font4"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="23dp"
+                    android:background="@drawable/stroke_btn"
+                    android:fontFamily="@font/bm"
+                    android:text="고딕체"
+                    android:textColor="#7A7A7A" />
+
+            </LinearLayout>
+
+            <!--            </HorizontalScrollView>-->
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/black">
+
+        //배너 광고
+        //ca-app-pub-8461307543970328/6023566142
+
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-8461307543970328/6023566142"></com.google.android.gms.ads.AdView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/Create_bar"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="#252525"
+    android:theme="@style/Theme.HorrorKotlin"
+    app:titleCentered="true"
+    app:titleTextColor="@color/black"
+    android:elevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#252525">
+
+        <Button
+            android:id="@+id/beck_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/back_btn" />
+
+        <TextView
+            android:id="@+id/top_title"
+            android:layout_width="280dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:background="#252525"
+            android:singleLine="true"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/save_24" />
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.Toolbar>
+
+

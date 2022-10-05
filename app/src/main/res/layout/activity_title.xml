@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    tools:context=".Activity.TitleActivity"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/Title_bar"
+                layout="@layout/tiele_bar"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            //배너 광고
+            //ca-app-pub-8461307543970328/1041975543
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Recycle_View"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintVertical_bias="1.0"
+                tools:listitem="@layout/word_view" />
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="end"
+                android:background="@color/black"
+                app:adSize="BANNER"
+                app:adUnitId="ca-app-pub-8461307543970328/1041975543"></com.google.android.gms.ads.AdView>
+
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#1C1C1C"
+        android:layout_gravity="end"
+        android:id="@+id/naviview">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="20dp"
+                android:text="검색"
+                android:fontFamily="@font/bitro"
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:textColor="#ACACAC" />
+
+            <EditText
+                android:id="@+id/edit_title"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:fontFamily="@font/bitro"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:hint="제목을 입력해주세요."
+                android:textColorHint="#ACACAC"
+                android:background="@null"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="카테고리"
+                android:fontFamily="@font/bitro"
+                android:textColor="#ACACAC"
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="10dp"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:id="@+id/All"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="left"
+                android:background="#00ff0000"
+                android:text="전체"
+                android:fontFamily="@font/bitro"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/Unread"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="left"
+                android:background="#00ff0000"
+                android:text="안본글"
+                android:fontFamily="@font/bitro"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/Bookmark"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="left"
+                android:background="#00ff0000"
+                android:text="즐겨찾기"
+                android:fontFamily="@font/bitro"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="2dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginRight="10dp"-->
+<!--                android:layout_marginBottom="20dp"-->
+<!--                android:background="@color/white" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="글쓰기"-->
+<!--                android:fontFamily="@font/bitro"-->
+<!--                android:textColor="#ACACAC"-->
+<!--                android:textSize="13dp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:layout_marginLeft="14dp"-->
+<!--                android:layout_marginRight="14dp"-->
+<!--                android:layout_marginBottom="10dp"/>-->
+
+<!--            <Button-->
+<!--                android:id="@+id/creative"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_marginLeft="14dp"-->
+<!--                android:layout_marginRight="14dp"-->
+<!--                android:layout_marginBottom="5dp"-->
+<!--                android:gravity="left"-->
+<!--                android:background="#00ff0000"-->
+<!--                android:text="창작글 쓰기"-->
+<!--                android:fontFamily="@font/bitro"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textStyle="bold"/>-->
+
+<!--            <Button-->
+<!--                android:id="@+id/watch"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_marginLeft="14dp"-->
+<!--                android:layout_marginRight="14dp"-->
+<!--                android:layout_marginBottom="5dp"-->
+<!--                android:gravity="left"-->
+<!--                android:background="#00ff0000"-->
+<!--                android:text="내가 쓴 글"-->
+<!--                android:fontFamily="@font/bitro"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textStyle="bold"/>-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="문의하기"
+                android:fontFamily="@font/bitro"
+                android:textColor="#ACACAC"
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="10dp"/>
+
+            <Button
+                android:id="@+id/Update"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="left"
+                android:background="#00ff0000"
+                android:text="업데이트 문의"
+                android:fontFamily="@font/bitro"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/Error"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="left"
+                android:background="#00ff0000"
+                android:text="오류 및 버그 문의"
+                android:fontFamily="@font/bitro"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="설정"
+                android:fontFamily="@font/bitro"
+                android:textColor="#ACACAC"
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/bitro"
+                    android:gravity="center"
+                    android:text="전체 화면 유지하기"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="14dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/full_screen"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/bitro"
+                    android:gravity="center"
+                    android:text="카테고리 상단바 고정"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="14dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/category"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp" />
+
+            </LinearLayout>
+
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="커뮤니티"-->
+            <!--                android:fontFamily="@font/bitro"-->
+            <!--                android:textColor="#ACACAC"-->
+            <!--                android:textSize="13dp"-->
+            <!--                android:textStyle="bold"-->
+            <!--                android:layout_marginLeft="14dp"-->
+            <!--                android:layout_marginRight="14dp"-->
+            <!--                android:layout_marginBottom="10dp"/>-->
+
+            <!--            <Button-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="30dp"-->
+            <!--                android:layout_marginLeft="14dp"-->
+            <!--                android:layout_marginRight="14dp"-->
+            <!--                android:layout_marginBottom="5dp"-->
+            <!--                android:gravity="left"-->
+            <!--                android:background="#00ff0000"-->
+            <!--                android:text="커뮤니티 가기"-->
+            <!--                android:fontFamily="@font/bitro"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="20dp"-->
+            <!--                android:textStyle="bold"/>-->
+
+        </LinearLayout>
+
+    </com.google.android.material.navigation.NavigationView>
+
+    <!--   <include-->
+    <!--       layout="@layout/popup"-->
+    <!--       android:layout_width="match_parent"-->
+    <!--       android:layout_height="match_parent"/>-->
+
+</androidx.drawerlayout.widget.DrawerLayout>

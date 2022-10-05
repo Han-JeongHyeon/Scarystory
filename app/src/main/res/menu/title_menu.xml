@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:icon="@drawable/more_vert_btn"
+        android:title=""
+        app:showAsAction="always">
+
+        <menu>
+
+            <item
+                android:icon="@drawable/email_btn"
+                android:title="문의하기"
+                app:showAsAction="never">
+
+                <menu>
+
+                    <item
+                        android:icon="@drawable/updates_btn"
+                        android:id="@+id/Update"
+                        android:title="업데이트"
+                        app:showAsAction="never"/>
+
+                    <item
+                        android:icon="@drawable/bug_btn"
+                        android:id="@+id/Error"
+                        android:title="오류 및 버그"
+                        app:showAsAction="never"/>
+
+                </menu>
+
+            </item>
+
+        </menu>
+
+    </item>
+
+</menu>
