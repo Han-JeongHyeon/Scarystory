@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">horrorKotlin</string>
+    <string name="AD" translatable="false">ca-app-pub-8461307543970328/1041975543</string>
 </resources>

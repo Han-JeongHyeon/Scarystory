@@ -29,37 +29,50 @@ class Adapter(private val context: Context) : RecyclerView.Adapter<Adapter.ViewH
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val txtName: TextView = itemView.findViewById(R.id.list_txt)
-        private val list_line: TextView = itemView.findViewById(R.id.list_line)
-        private val list_number: TextView = itemView.findViewById(R.id.list_number)
+        private val listLine: TextView = itemView.findViewById(R.id.list_line)
+        private val listNumber: TextView = itemView.findViewById(R.id.list_number)
+
+        val view = view
 
         fun bind(item: AdapterData) {
             txtName.text = item.Title
-            list_number.text = "${item.position+1}"
+            listNumber.text = "${item.position+1}"
 
-            if(item.value)
-            {
-                txtName.setTextColor(Color.parseColor("#858585"))
-                list_line.setTextColor(Color.parseColor("#858585"))
-                list_number.setTextColor(Color.parseColor("#858585"))
+            val color = if(item.value) {
+                "#858585"
+            } else{
+                "#EAEAEA"
             }
-            else{
-                txtName.setTextColor(Color.parseColor("#EAEAEA"))
-                list_line.setTextColor(Color.parseColor("#EAEAEA"))
-                list_number.setTextColor(Color.parseColor("#EAEAEA"))
-            }
+
+            txtName.setTextColor(Color.parseColor(color))
+            listLine.setTextColor(Color.parseColor(color))
+            listNumber.setTextColor(Color.parseColor(color))
 
             itemView.setOnClickListener {
 
                 val intent = Intent(context, StoryActivity::class.java)
-                intent.putExtra("All", item)
+                intent.putExtra("position",item.position)
+                intent.putExtra("tag",item.tag)
                 intent.run {
                     context.startActivity(this)
                 }
+
+                listener?.onItemClick(view)
 
             }
 
         }
 
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(v: View)
+    }
+
+    private var listener : OnItemClickListener? = null
+
+    fun setOnItemClickListener(listener : OnItemClickListener) {
+        this.listener = listener
     }
 
 }

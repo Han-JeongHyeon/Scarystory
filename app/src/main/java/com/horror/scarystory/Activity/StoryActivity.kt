@@ -5,11 +5,14 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
+import android.icu.text.CaseMap
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -30,6 +33,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.horror.scarystory.Adapter.AdapterData
+import com.horror.scarystory.PrefKey
 import com.horror.scarystory.R
 import com.horror.scarystory.Story.*
 import com.horror.scarystory.databinding.ActivityStoryBinding
@@ -39,45 +43,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.DataInputStream
 import java.lang.Exception
+import java.text.Bidi
 
 class StoryActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityStoryBinding
-
-    var title = ""
-    var Position = 0
-    var Tag = ""
+    private val binding by lazy { ActivityStoryBinding.inflate(layoutInflater) }
 
     var Tool_bar: Toolbar? = null
 
     var seek: SharedPreferences? = null
     var font: SharedPreferences? = null
+    var Bookmark: Button? = null
 
     private var mInterstitialAd: InterstitialAd? = null
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityStoryBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-
-        val TitleBar = findViewById<TextView>(R.id.top_title)
-        val Back_btn = findViewById<Button>(R.id.beck_btn)
-        val Bookmark = findViewById<Button>(R.id.bookmark)
-
-        val Delete = findViewById<Button>(R.id.delete)
-        val Edit = findViewById<Button>(R.id.edit)
-        val Fake = findViewById<Button>(R.id.fake)
-
-        //리스트 이름 배열
-        val Title = resources.getStringArray(R.array.name)
-
-        //전체화면 호출
-        val fullScreen = getSharedPreferences("fullScreen", Context.MODE_PRIVATE)
-        fullScreenMode(fullScreen.getBoolean("fullScreen", false))
-
+    fun addAd() {
         MobileAds.initialize(this) {}
 
         val adRequest = AdRequest.Builder().build()
@@ -96,387 +76,326 @@ class StoryActivity : AppCompatActivity() {
             override fun onAdLoaded() {}
         }
 
-        setupInterstitialAd()
+        //광고 단가 높음
+        InterstitialAd.load(this@StoryActivity,
+            "ca-app-pub-8461307543970328/8595808456",
+            adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d("광고", "중간 시작")
+                    //광고 단가 높음 끝
+                    //광고 단가 중간
+                    InterstitialAd.load(this@StoryActivity,
+                        "ca-app-pub-8461307543970328/2685006225",
+                        adRequest, object : InterstitialAdLoadCallback() {
+                            override fun onAdFailedToLoad(adError: LoadAdError) {
+                                Log.d("광고", "낮음 단가")
+                                //광고 단가 중간 끝
+                                InterstitialAd.load(this@StoryActivity,
+                                    "ca-app-pub-8461307543970328/9771239466",
+                                    adRequest, object : InterstitialAdLoadCallback() {
+                                        override fun onAdFailedToLoad(adError: LoadAdError) {
+                                            Log.d("광고", "낮음 못받음")
+                                            mInterstitialAd = null
+                                        }
 
-        //전면 광고
-        val Advertising_count = application.getSharedPreferences("count", 0)
-        var Advertising = Advertising_count.getInt("count", 0)
+                                        override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                                            Log.d("광고", "낮은 단가")
+                                            mInterstitialAd = interstitialAd
+                                        }
+                                    })
+                            }
 
-        val count = Advertising_count.edit()
-        count.putInt("count", Advertising + 1)
-        count.apply()
+                            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                                Log.d("광고", "중간 단가")
+                                mInterstitialAd = interstitialAd
+                            }
+                        })
+                }
 
-        if(Advertising >= 5){
-            //광고 단가 높음
-            InterstitialAd.load(this@StoryActivity,
-                "ca-app-pub-8461307543970328/8595808456",
-                adRequest,
-                object : InterstitialAdLoadCallback() {
-                    override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.d("광고", "중간 시작")
-                        //광고 단가 높음 끝
-                        //광고 단가 중간
-                        InterstitialAd.load(this@StoryActivity,
-                            "ca-app-pub-8461307543970328/2685006225",
-                            adRequest, object : InterstitialAdLoadCallback() {
-                                override fun onAdFailedToLoad(adError: LoadAdError) {
-                                    Log.d("광고", "낮음 단가")
-                                    //광고 단가 중간 끝
-                                    InterstitialAd.load(this@StoryActivity,
-                                        "ca-app-pub-8461307543970328/9771239466",
-                                        adRequest, object : InterstitialAdLoadCallback() {
-                                            override fun onAdFailedToLoad(adError: LoadAdError) {
-                                                Log.d("광고", "낮음 못받음")
-                                                mInterstitialAd = null
-                                            }
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d("광고", "높은 단가")
+                    mInterstitialAd = interstitialAd
 
-                                            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                                                Log.d("광고", "낮은 단가")
-                                                mInterstitialAd = interstitialAd
-                                            }
-                                        })
-                                }
+                }
+            })
 
-                                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                                    Log.d("광고", "중간 단가")
-                                    mInterstitialAd = interstitialAd
-                                }
-                            })
-                    }
+    }
 
-                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                        Log.d("광고", "높은 단가")
-                        mInterstitialAd = interstitialAd
+    companion object {
+        var position = 0
+        var tag = ""
+        var title = ""
+    }
 
-                    }
-                })
-            count.putInt("count", 0)
-            count.apply()
+    fun setStory() {
+        val TitleBar = findViewById<TextView>(R.id.top_title)
+
+        val value: String = when (position / 100) {
+            0 -> story0.getStory(position)
+            1 -> story1.getStory(position % 100)
+            else -> {
+                "null"
+            }
         }
 
-        //이야기 내용
-        var value = ""
-
-        //이야기 데이터 받기
-        val data = intent.getParcelableExtra<AdapterData>("All")
-
-        if (data != null) {
-            title = data!!.Title
-            Position = data!!.position
-            Tag = data!!.tag
-
-            val da = getSharedPreferences("data", 0)
-            val d_a = da.edit()
-            d_a.putString("data", "true")
-            d_a.apply()
-
+        binding.story.text = value.substring(0, value.indexOf("@"))
+        val text = if(value.substring(value.indexOf("@") + 1) == "") {
+            "이 이야기는 해석이 없습니다."
         } else {
-            Position = intent.getIntExtra("position", -1)
-            Tag = intent.getStringExtra("tag").toString()
-//            if(Tag == "Watch"){
-//                var input = openFileInput("$Position.txt")
-//                var dis = DataInputStream(input)
-//
-//                var valueUTF = dis.readUTF()     //문자형 type
-//                dis.close() //종료
-//
-//                title = valueUTF.substring(0, valueUTF.indexOf("/"))
-//            }
-//            else{
-                title = Title[Position]
-//            }
+            value.substring(value.indexOf("@") + 1)
+        }
+        binding.interText.text = text
+        title = Title[position]
+
+        binding.title.text = title
+        TitleBar.text = "${position + 1}. $title"
+
+        //포지션 값 저장
+        PrefKey(this).putInt("number", position)
+
+        //쉐어드로 값 변경
+        PrefKey(this).putBoolean("li_boolean_$position", true)
+
+        //들어올때 표시
+        when (PrefKey(this).getBoolean("favor_boolean_$position", false)) {
+            true -> {
+                Bookmark?.setBackgroundResource(R.drawable.bookmark_btn)
+            }
+            false -> {
+                Bookmark?.setBackgroundResource(R.drawable.bookmark_border_btn)
+            }
         }
 
-//        Log.d("TAG", "$Tag")
+        getBtn("Home", tag)
+
+        //폰트 사이즈 변경
+        getSeek(PrefKey(this).getInt("seek", 22))
+
+        //폰트 가져오기
+        getFont(PrefKey(this).getInt("font", 1), "")
+    }
+
+    var Title: Array<String> = listOf<String>().toTypedArray()
+
+    @SuppressLint("SetTextI18n")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
+        Bookmark = findViewById<Button>(R.id.bookmark)
+        Title = resources.getStringArray(R.array.name)
+        val backBtn = findViewById<Button>(R.id.beck_btn)
+
+        //전체화면 호출
+        fullScreenMode(PrefKey(this).getBoolean("fullScreen", false))
+
+        position = intent.getIntExtra("position", -1)
+        tag = intent.getStringExtra("tag").toString()
+        title = Title[position]
+
+        setupInterstitialAd()
+        addAd()
+        setStory()
 
         //툴바
-        Tool_bar = findViewById<Toolbar>(R.id.Story_bar)
+        Tool_bar = findViewById(R.id.Story_bar)
         setSupportActionBar(Tool_bar)
 
-//        //타이틀 변경
-//        if(Tag.equals("Watch")){
-//            Delete.visibility = View.VISIBLE
-//            Edit.visibility = View.VISIBLE
-//            Fake.visibility = View.VISIBLE
-//
-//            Bookmark.visibility = View.GONE
-//
-//            binding.title.text = "$title"
-//            TitleBar.text = "$title"
-//
-//            var input = openFileInput("$Position.txt")
-//            var dis = DataInputStream(input)
-//
-//            var valueUTF = dis.readUTF()     //문자형 type
-//            dis.close() //종료
-//
-//            value = valueUTF.substring(valueUTF.indexOf("/")+1)
-//        }
-//        else{
-//            Delete.visibility = View.GONE
-//            Edit.visibility = View.GONE
-//            Fake.visibility = View.GONE
-//
-//            Bookmark.visibility = View.VISIBLE
-
-            //포지션 값 저장
-            val list_num = getSharedPreferences("number",0)
-            val list_num_ = list_num.edit()
-            list_num_.putInt("number", Position)
-            list_num_.apply()
-
-            //쉐어드로 값 변경
-            val liboolean = getSharedPreferences("li_boolean_$Position", 0)
-            val li_boolean = liboolean.edit()
-            li_boolean.putBoolean("li_boolean_$Position", true)
-            li_boolean.apply()
-
-            binding.title.text = title
-            TitleBar.text = "${Position + 1}. $title"
-
-            //이야기 가져오기
-            when (Position / 100) {
-
-                0 -> {
-                    value = story0.getStory(Position)
-                }
-                1 -> {
-                    value = story1.getStory(Position % 100)
-                }
-                2 -> {
-                    value = story2.getStory(Position % 200)
-                }
-                3 -> {
-                    value = story3.getStory(Position % 300)
-                }
-                4 -> {
-                    value = story4.getStory(Position % 400)
-                }
-                5 -> {
-                    value = story5.getStory(Position % 500)
-                }
-            }
-
-//        }
-
-        binding.story.text = value.substring(0, value.indexOf("@"));
-        binding.interText.text = value.substring(value.indexOf("@")+1)
-
         //백 버튼
-        Back_btn.setOnClickListener {
+        backBtn.setOnClickListener {
             val intent = Intent(this, TitleActivity::class.java)
-            intent.putExtra("name", Tag)
+            intent.putExtra("name", tag)
             startActivity(intent)
 
             finish()
 
-            if (mInterstitialAd != null) {
+            if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
                 mInterstitialAd?.show(this@StoryActivity)
+                PrefKey(this).putInt("count", 0)
             }
 
             overridePendingTransition(R.anim.activity_down_sub, R.anim.activity_down)
         }
 
-        //들어올때 표시
-        val favorboolean = getSharedPreferences("favor_boolean_$Position", Context.MODE_PRIVATE)
-        when (favorboolean.getBoolean("favor_boolean_$Position", false)) {
-            true -> {
-                Bookmark.setBackgroundResource(R.drawable.bookmark_btn)
-            }
-            false -> {
-                Bookmark.setBackgroundResource(R.drawable.bookmark_border_btn)
-            }
-        }
-
         //북마크 표시
-        Bookmark.setOnClickListener {
-            when (favorboolean.getBoolean("favor_boolean_$Position", false)) {
+        Bookmark!!.setOnClickListener {
+            when (PrefKey(this).getBoolean("favor_boolean_$position", false)) {
                 true -> {
-                    Bookmark.setBackgroundResource(R.drawable.bookmark_border_btn)
-                    val favor_boolean = favorboolean.edit()
-                    favor_boolean.putBoolean("favor_boolean_$Position", false)
-                    favor_boolean.apply()
+                    Bookmark?.setBackgroundResource(R.drawable.bookmark_border_btn)
+                    PrefKey(this).putBoolean("favor_boolean_$position", false)
                 }
                 false -> {
-                    Bookmark.setBackgroundResource(R.drawable.bookmark_btn)
-                    val favor_boolean = favorboolean.edit()
-                    favor_boolean.putBoolean("favor_boolean_$Position", true)
-                    favor_boolean.apply()
+                    Bookmark?.setBackgroundResource(R.drawable.bookmark_btn)
+                    PrefKey(this).putBoolean("favor_boolean_$position", true)
                 }
             }
         }
 
         //다음 이야기로 이동
         binding.leftBtn.setOnClickListener {
-            getBtn("Left", Tag)
+            getBtn("Left", tag)
         }
 
         binding.rightBtn.setOnClickListener {
-            getBtn("Right", Tag)
+            getBtn("Right", tag)
         }
-
-        getBtn("Home", Tag)
 
         //리스트 화면을 터치하면
         binding.Layout.setOnClickListener {
-            getBtn("Option",Tag)
+            getBtn("Option", tag)
         }
 
         //스크롤 화면을 터치하면
         binding.scroll.setOnClickListener {
-            getBtn("Option",Tag)
+            getBtn("Option", tag)
         }
 
         //스크롤을 내리거나 올리면
         binding.scroll.setOnScrollChangeListener { view, i, i2, i3, i4 ->
-            if (Tool_bar?.visibility == View.VISIBLE){
-                getBtn("Option",Tag)
+            if (Tool_bar?.visibility == View.VISIBLE) {
+                getBtn("Option", tag)
             }
-            if (!view.canScrollVertically(1) || !view.canScrollVertically(-1)){
-                getBtn("Option",Tag)
+            if (!view.canScrollVertically(1) || !view.canScrollVertically(-1)) {
+                getBtn("Option", tag)
             }
         }
-
-        //폰트 사이즈 변경
-        seek = getSharedPreferences("seek", Context.MODE_PRIVATE)
-        getSeek(seek?.getInt("seek",22))
 
         binding.seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                 getSeek(seekBar.progress)
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
         //에딧으로 폰트 사이즈 변경
         binding.checkSeek.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
-            if (checkSeek.text.toString().toInt() in 1..40){
+            if (checkSeek.text.toString().toInt() in 1..40) {
                 getSeek(checkSeek.text.toString().toInt())
-            }
-            else{
-                Toast.makeText(this@StoryActivity, "입력할 수 있는 값은 10부터 40까지 입니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@StoryActivity, "입력할 수 있는 값은 10부터 40까지 입니다.", Toast.LENGTH_SHORT)
+                    .show()
                 checkSeek.setText(seek?.getInt("seek", 22).toString() + "")
             }
             true
         })
 
-        //폰트 가져오기
-        font = getSharedPreferences("font", Context.MODE_PRIVATE)
-        getFont(font?.getInt("font",1))
-
         binding.font1.setOnClickListener {
-            getFont(1)
+            getFont(1, "btn")
         }
         binding.font2.setOnClickListener {
-            getFont(2)
+            getFont(2, "btn")
         }
         binding.font3.setOnClickListener {
-            getFont(3)
+            getFont(3, "btn")
         }
         binding.font4.setOnClickListener {
-            getFont(4)
+            getFont(4, "btn")
         }
 
         binding.InterBtn.setOnClickListener {
-            if (binding.interLayout.visibility == View.VISIBLE){
+            if (binding.interLayout.visibility == View.VISIBLE) {
                 binding.interLayout.visibility = View.INVISIBLE
-                //binding.interLayout.startAnimation(AnimationUtils.loadAnimation(applicationContext,R.anim.interbtn_up))
-                binding.interLayout.startAnimation(AnimationUtils.loadAnimation(applicationContext,R.anim.inter_down))
-            }
-            else{
+                Handler().postDelayed(Runnable {
+                    binding.InterBtn.visibility = View.VISIBLE
+                }, 700)
+                binding.interLayout.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        applicationContext,
+                        R.anim.inter_down
+                    )
+                )
+            } else {
                 binding.interLayout.visibility = View.VISIBLE
-                //binding.interLayout.startAnimation(AnimationUtils.loadAnimation(applicationContext,R.anim.interbtn_up))
-                binding.interLayout.startAnimation(AnimationUtils.loadAnimation(applicationContext,R.anim.inter_up))
+                binding.InterBtn.visibility = View.INVISIBLE
+                binding.interLayout.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        applicationContext,
+                        R.anim.inter_up
+                    )
+                )
             }
         }
 
         //해석 버튼
         binding.interBtn.setOnClickListener {
-            if (binding.interLayout.visibility == View.VISIBLE){
+            if (binding.interLayout.visibility == View.VISIBLE) {
                 binding.interLayout.visibility = View.INVISIBLE
-                //binding.interLayout.startAnimation(AnimationUtils.loadAnimation(applicationContext,R.anim.interbtn_up))
-                binding.interLayout.startAnimation(AnimationUtils.loadAnimation(applicationContext,R.anim.inter_down))
-            }
-            else{
+                Handler().postDelayed(Runnable {
+                    binding.InterBtn.visibility = View.VISIBLE
+                }, 700)
+                binding.interLayout.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        applicationContext,
+                        R.anim.inter_down
+                    )
+                )
+            } else {
                 binding.interLayout.visibility = View.VISIBLE
-                //binding.interLayout.startAnimation(AnimationUtils.loadAnimation(applicationContext,R.anim.interbtn_up))
-                binding.interLayout.startAnimation(AnimationUtils.loadAnimation(applicationContext,R.anim.inter_up))
+                binding.InterBtn.visibility = View.INVISIBLE
+                binding.interLayout.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        applicationContext,
+                        R.anim.inter_up
+                    )
+                )
             }
         }
-
-//        Edit.setOnClickListener {
-//            val intent = Intent(this, CreativeActivity::class.java)
-//            intent.putExtra("name", Tag)
-//            intent.putExtra("position", Position)
-//            startActivity(intent)
-//
-//            overridePendingTransition(R.anim.activity_up, R.anim.activity_up_sub)
-//        }
-
-//        Delete.setOnClickListener {
-//            val builder = AlertDialog.Builder(this)
-//            builder.setTitle("삭제")
-//                .setMessage("${title}글을 삭제하겠습니까?")
-//                .setPositiveButton("삭제",
-//                    DialogInterface.OnClickListener { dialog, id ->
-//                        val Delete = getSharedPreferences("delete_$Position",0)
-//                        val delete = Delete.edit()
-//                        delete.putBoolean("delete_$Position",false)
-//                        delete.apply()
-//
-//                        deleteFile("$Position.txt")
-//
-//                        val intent = Intent(this, TitleActivity::class.java)
-//                        intent.putExtra("name", Tag)
-//                        startActivity(intent)
-//
-//                        overridePendingTransition(R.anim.activity_down_sub, R.anim.activity_down)
-//
-//                        Toast.makeText(this,"삭제가 완료되었습니다.",Toast.LENGTH_SHORT).show()
-//                    })
-//                .setNegativeButton("취소",
-//                    DialogInterface.OnClickListener { dialog, id ->
-//
-//                    })
-//            // 다이얼로그를 띄워주기
-//            builder.show()
-//        }
 
     }
 
     //폰트 설정
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getFont(Value: Int?){
-        val On_Stroke = R.drawable.stroke_btn_w; val Off_Stroke = R.drawable.stroke_btn; val White = "#FFFFFF"; val Gray = "#7A7A7A"
+    fun getFont(Value: Int?, type: String) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
+            if (type == "btn") {
+                Toast.makeText(this, "현재 기기는 폰트 변경이 불가능합니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                binding.story.typeface = Typeface.createFromAsset(assets, "font/yoondokrip.ttf")
+            }
+            return
+        } else {
+            val On_Stroke = R.drawable.stroke_btn_w
+            val Off_Stroke = R.drawable.stroke_btn
+            val White = "#FFFFFF"
+            val Gray = "#7A7A7A"
 
-        binding.font1.setBackgroundResource(if(Value == 1) On_Stroke else Off_Stroke)
-        binding.font1.setTextColor(Color.parseColor(if (Value == 1) White else Gray))
-        if (Value == 1){ binding.story.typeface = Typeface.createFromAsset(assets,"font/yoondokrip.ttf") }
+            binding.font1.setBackgroundResource(if (Value == 1) On_Stroke else Off_Stroke)
+            binding.font1.setTextColor(Color.parseColor(if (Value == 1) White else Gray))
+            if (Value == 1) {
+                binding.story.typeface = Typeface.createFromAsset(assets, "font/yoondokrip.ttf")
+            }
 
-        binding.font2.setBackgroundResource(if(Value == 2) On_Stroke else Off_Stroke)
-        binding.font2.setTextColor(Color.parseColor(if (Value == 2) White else Gray))
-        if (Value == 2){ binding.story.typeface = Typeface.createFromAsset(assets,"font/bm.ttf") }
+            binding.font2.setBackgroundResource(if (Value == 2) On_Stroke else Off_Stroke)
+            binding.font2.setTextColor(Color.parseColor(if (Value == 2) White else Gray))
+            if (Value == 2) {
+                binding.story.typeface = Typeface.createFromAsset(assets, "font/bm.ttf")
+            }
 
-        binding.font3.setBackgroundResource(if(Value == 3) On_Stroke else Off_Stroke)
-        binding.font3.setTextColor(Color.parseColor(if (Value == 3) White else Gray))
-        if (Value == 3){ binding.story.typeface = Typeface.createFromAsset(assets,"font/bitrofri.ttf") }
+            binding.font3.setBackgroundResource(if (Value == 3) On_Stroke else Off_Stroke)
+            binding.font3.setTextColor(Color.parseColor(if (Value == 3) White else Gray))
+            if (Value == 3) {
+                binding.story.typeface = Typeface.createFromAsset(assets, "font/bitrofri.ttf")
+            }
 
-        binding.font4.setBackgroundResource(if(Value == 4) On_Stroke else Off_Stroke)
-        binding.font4.setTextColor(Color.parseColor(if (Value == 4) White else Gray))
-        if (Value == 4){ binding.story.typeface = Typeface.createFromAsset(assets,"font/nanum.ttf") }
+            binding.font4.setBackgroundResource(if (Value == 4) On_Stroke else Off_Stroke)
+            binding.font4.setTextColor(Color.parseColor(if (Value == 4) White else Gray))
+            if (Value == 4) {
+                binding.story.typeface = Typeface.createFromAsset(assets, "font/nanum.ttf")
+            }
 
-        val font_num = font?.edit()
-        font_num?.putInt("font", Value!!)
-        font_num?.apply()
-
+            PrefKey(this).putInt("font", Value!!)
+        }
     }
 
     //메뉴
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.font -> {
                 binding.textOption.visibility = View.VISIBLE
+                binding.InterBtn.visibility = View.INVISIBLE
+                binding.interLayout.visibility = View.INVISIBLE
             }
             R.id.Sharing -> {
                 val Sharing_intent = Intent().apply {
@@ -487,72 +406,57 @@ class StoryActivity : AppCompatActivity() {
                     )
                     type = "text/plain"
                 }
-                startActivity(Intent.createChooser(Sharing_intent,null))
+                startActivity(Intent.createChooser(Sharing_intent, null))
             }
             R.id.Update -> {
-                try {
-                    val email = Intent(Intent.ACTION_SEND)
-                    email.type = "plain/text"
-                    email.setPackage("com.google.android.gm")
-                    val address = arrayOf("jhsoft04@gmail.com")
-                    email.putExtra(Intent.EXTRA_EMAIL, address)
-                    email.putExtra(Intent.EXTRA_SUBJECT, "[이무이 업데이트 문의]")
-                    email.putExtra(
-                        Intent.EXTRA_TEXT,
-                        "앱 버전 (AppVersion): ${applicationContext.packageManager.getPackageInfo(applicationContext.packageName,0).versionName}\n"+
-                                "기기명 (Device): ${Build.MODEL}\n"+
-                                "안드로이드 OS버전 (Android OS Ver): ${Build.VERSION.RELEASE}\n\n"+
-                                "원하는 업데이트 : \n\n\n"
-                    )
-                    startActivity(email)
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Gmail앱이 활성화 되어 있지 않아 실행할 수 없습니다.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+                sendMail("[무서운 이야기 업데이트 문의]", "원하는 업데이트")
             }
             R.id.Error -> {
-                try {
-                    val email = Intent(Intent.ACTION_SEND)
-                    email.type = "plain/text"
-                    email.setPackage("com.google.android.gm")
-                    val address = arrayOf("jhsoft04@gmail.com")
-                    email.putExtra(Intent.EXTRA_EMAIL, address)
-                    email.putExtra(Intent.EXTRA_SUBJECT, "[이무이 오류 문의]")
-                    email.putExtra(
-                        Intent.EXTRA_TEXT,
-                        "앱 버전 (AppVersion): ${applicationContext.packageManager.getPackageInfo(applicationContext.packageName,0).versionName}\n"+
-                                "기기명 (Device): ${Build.MODEL}\n"+
-                                "안드로이드 OS버전 (Android OS Ver): ${Build.VERSION.RELEASE}\n"+
-                                "${Position}화 $title \n\n" +
-                                "오류 제보 : \n\n\n"
-                    )
-                    startActivity(email)
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Gmail앱이 활성화 되어 있지 않아 실행할 수 없습니다.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+                sendMail("[무서운 이야기 오류 문의]", "오류 설명")
             }
-
         }
         return super.onOptionsItemSelected(item)
     }
 
+    fun sendMail(title: String, content: String) {
+        try {
+            val email = Intent(Intent.ACTION_SEND)
+            email.type = "plain/text"
+            email.setPackage("com.google.android.gm")
+            val address = arrayOf("jhsoft04@gmail.com")
+            email.putExtra(Intent.EXTRA_EMAIL, address)
+            email.putExtra(Intent.EXTRA_SUBJECT, title)
+            email.putExtra(
+                Intent.EXTRA_TEXT,
+                "앱 버전 (AppVersion): ${
+                    applicationContext.packageManager.getPackageInfo(
+                        applicationContext.packageName,
+                        0
+                    ).versionName
+                }\n" +
+                        "기기명 (Device): ${Build.MODEL}\n" +
+                        "안드로이드 OS버전 (Android OS Ver): ${Build.VERSION.RELEASE}\n\n" +
+                        "$content : \n\n\n"
+            )
+            startActivity(email)
+        } catch (e: Exception) {
+            Toast.makeText(
+                applicationContext,
+                "Gmail앱이 활성화 되어 있지 않아 실행할 수 없습니다.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+
     //글자 크기
-    fun getSeek(Value : Int?){
+    fun getSeek(Value: Int?) {
 
         binding.seekbar.progress = Value!!
         binding.story.textSize = Value!!.toFloat()
         binding.checkSeek.setText(Value!!.toString() + "")
 
-        val seek_pro = seek?.edit()
-        seek_pro?.putInt("seek", Value)
-        seek_pro?.apply()
+        PrefKey(this).putInt("seek", Value)
 
     }
 
@@ -562,31 +466,30 @@ class StoryActivity : AppCompatActivity() {
 
         var numvalue = title.size
 
-        val fullScreen = getSharedPreferences("fullScreen", Context.MODE_PRIVATE)
-        fullScreenMode(fullScreen.getBoolean("fullScreen", false))
+        fullScreenMode(PrefKey(this).getBoolean("fullScreen", false))
 
-        val posi = Position
+        val posi = position
 
-        val up = AnimationUtils.loadAnimation(applicationContext,R.anim.toolbar_up)
-        val down = AnimationUtils.loadAnimation(applicationContext,R.anim.toolbar_down)
+        val up = AnimationUtils.loadAnimation(applicationContext, R.anim.toolbar_up)
+        val down = AnimationUtils.loadAnimation(applicationContext, R.anim.toolbar_down)
 
         when (Tag) {
             "All" -> {
-                if (Position != 0) {
+                if (position != 0) {
                     binding.leftBtn.visibility = View.VISIBLE
                 } else {
                     binding.leftBtn.visibility = View.INVISIBLE
                 }
-                if (Position != (numvalue - 1)) {
+                if (position != (numvalue - 1)) {
                     binding.rightBtn.visibility = View.VISIBLE
                 } else {
                     binding.rightBtn.visibility = View.INVISIBLE
                 }
                 if (Location == "Left") {
-                    Position -= 1
+                    position -= 1
                 }
                 if (Location == "Right") {
-                    Position += 1
+                    position += 1
                 }
             }
             "Unread" -> {
@@ -595,7 +498,7 @@ class StoryActivity : AppCompatActivity() {
                     ////Left 다음 이야기 체크
                     if (Location == "Left") {
                         if (!liboolean.getBoolean("li_boolean_${i}", false)) {
-                            Position = i
+                            position = i
                         }
                     }
                     //버튼이 필요한지 체크
@@ -611,7 +514,7 @@ class StoryActivity : AppCompatActivity() {
                     //Right 다음 이야기 체크
                     if (Location == "Right") {
                         if (!liboolean.getBoolean("li_boolean_${i}", false)) {
-                            Position = i
+                            position = i
                         }
                     }
                     //버튼이 필요한지 체크
@@ -625,11 +528,12 @@ class StoryActivity : AppCompatActivity() {
             }
             "Bookmark" -> {
                 for (i in (posi - 1) downTo -1) {
-                    val favorboolean = getSharedPreferences("favor_boolean_${i}", Context.MODE_PRIVATE)
+                    val favorboolean =
+                        getSharedPreferences("favor_boolean_${i}", Context.MODE_PRIVATE)
                     //Left 다음 이야기 체크
                     if (Location == "Left") {
                         if (favorboolean.getBoolean("favor_boolean_${i}", false)) {
-                            Position = i
+                            position = i
                         }
                     }
                     //버튼이 필요한지 체크
@@ -646,7 +550,7 @@ class StoryActivity : AppCompatActivity() {
                     //Right 다음 이야기 체크
                     if (Location == "Right") {
                         if (favorboolean.getBoolean("favor_boolean_${i}", false)) {
-                            Position = i
+                            position = i
                         }
                     }
                     //버튼이 필요한지 체크
@@ -659,121 +563,94 @@ class StoryActivity : AppCompatActivity() {
                 }
             }
             "Search" -> {
-                val Search_Word = getSharedPreferences("Search_Word",0)
-                Search_Word.getString("Search_Word","")
+                val Search_Word = getSharedPreferences("Search_Word", 0)
+                Search_Word.getString("Search_Word", "")
                 binding.leftBtn.visibility = View.INVISIBLE
                 binding.rightBtn.visibility = View.INVISIBLE
                 for (i in (posi - 1) downTo 0) {
                     //Left 다음 이야기 체크
                     if (Location == "Left") {
-                        if (title[i].contains("${Search_Word.getString("Search_Word","")}")) {
-                            Position = i
+                        if (title[i].contains("${Search_Word.getString("Search_Word", "")}")) {
+                            position = i
                         }
                     }
                     //버튼이 필요한지 체크
 //                    if (i == -1) {
 //                        binding.leftBtn.visibility = View.INVISIBLE
 //                    }
-                    if (title[i].contains("${Search_Word.getString("Search_Word","")}")) {
+                    if (title[i].contains("${Search_Word.getString("Search_Word", "")}")) {
                         binding.leftBtn.visibility = View.VISIBLE; break
                     }
                 }
                 for (i in (posi + 1) until numvalue) {
                     //Right 다음 이야기 체크
                     if (Location == "Right") {
-                        if (title[i].contains("${Search_Word.getString("Search_Word","")}")) {
-                            Position = i
+                        if (title[i].contains("${Search_Word.getString("Search_Word", "")}")) {
+                            position = i
                         }
                     }
-                    //버튼이 필요한지 체크
-//                    if (i == numvalue) {
-//                        binding.rightBtn.visibility = View.INVISIBLE
-//                    }
-                    if (title[i].contains("${Search_Word.getString("Search_Word","")}")) {
+                    if (title[i].contains("${Search_Word.getString("Search_Word", "")}")) {
                         binding.rightBtn.visibility = View.VISIBLE; break
                     }
                 }
             }
-//            "Watch" -> {
-//                val create_number = getSharedPreferences("create_number",0)
-//                binding.leftBtn.visibility = View.INVISIBLE
-//                binding.rightBtn.visibility = View.INVISIBLE
-//                for (i in (posi - 1) downTo 0) {
-//                    val Delete = getSharedPreferences("delete_$i",0)
-//                    //Left 다음 이야기 체크
-//                    if (Location == "Left") {
-//                        if (Delete.getBoolean("delete_${i}", true)) {
-//                            Position = i
-//                        }
-//                    }
-//                    //버튼이 필요한지 체크
-////                    if (i == -1) {
-////                        binding.leftBtn.visibility = View.INVISIBLE
-////                    }
-//                    if (Delete.getBoolean("delete_${i}", true)) {
-//                        binding.leftBtn.visibility = View.VISIBLE; break
-//                    }
-//                }
-//                for (i in (posi + 1) until create_number.getInt("create_number", 0)) {
-//                    val Delete = getSharedPreferences("delete_$i",0)
-//                    //Right 다음 이야기 체크
-//                    if (Location == "Right") {
-//                        if (Delete.getBoolean("delete_${i}", true)) {
-//                            Position = i
-//                        }
-//                    }
-//                    //버튼이 필요한지 체크
-////                    if (i == create_number.getInt("create_number", 0)) {
-////                        binding.rightBtn.visibility = View.INVISIBLE
-////                    }
-//                    if (Delete.getBoolean("delete_${i}", true)) {
-//                        binding.rightBtn.visibility = View.VISIBLE; break
-//                    }
-//                }
-//            }
         }
 
         //버튼을 화면에 표시/표시 안함
-        if (Location == "Option"){
-            if (Tool_bar?.visibility == View.VISIBLE){
+        if (Location == "Option") {
+            if (Tool_bar?.visibility == View.VISIBLE) {
                 binding.leftBtn.visibility = View.INVISIBLE
                 binding.rightBtn.visibility = View.INVISIBLE
                 binding.textOption.visibility = View.INVISIBLE
+                binding.InterBtn.visibility = View.VISIBLE
                 Tool_bar?.visibility = View.INVISIBLE
 
                 Tool_bar?.startAnimation(up)
-            }
-            else{
+            } else {
                 Tool_bar?.visibility = View.VISIBLE
 
                 Tool_bar?.startAnimation(down)
             }
+
+            if (binding.interLayout.visibility == View.VISIBLE) {
+                binding.interLayout.visibility = View.INVISIBLE
+                Handler().postDelayed(Runnable {
+                    binding.InterBtn.visibility = View.VISIBLE
+                }, 700)
+                binding.interLayout.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        applicationContext,
+                        R.anim.inter_down
+                    )
+                )
+            }
         }
 
         if (Location == "Left" || Location == "Right") {
-//            if(!Tag.equals("Watch")){
-//                val liboolean = getSharedPreferences("li_boolean_${Position}", Context.MODE_PRIVATE)
-//                val li_boolean = liboolean.edit()
-//                li_boolean.putBoolean("li_boolean_${Position}", true)
-//                li_boolean.apply()
-//            }
+            binding.scroll.scrollTo(0,0)
+            setStory()
 
-            val intent = Intent(this, StoryActivity::class.java)
-            intent.putExtra("tag", Tag)
-            intent.putExtra("position", Position)
-            startActivity(intent)
+            var Advertising = PrefKey(this).getInt("count", 0)
 
-            finish()
+            PrefKey(this).putInt("count", Advertising + 1)
 
-            if (mInterstitialAd != null) {
+            if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
                 mInterstitialAd?.show(this@StoryActivity)
+                addAd()
+                PrefKey(this).putInt("count", 0)
             }
 
-            if (Location == "Left") {
-                overridePendingTransition(R.anim.activity_left, R.anim.activity_left_sub)
-            } else {
-                overridePendingTransition(R.anim.activity_right, R.anim.activity_right_sub)
-            }
+//            if (Location == "Left") {
+//                binding.root.startAnimation(
+//                    AnimationUtils.loadAnimation(
+//                        application,
+//                        R.anim.activity_left
+//                    )
+//                )
+//                overridePendingTransition(R.anim.activity_left, R.anim.activity_left_sub)
+//            } else {
+//                overridePendingTransition(R.anim.activity_right, R.anim.activity_right_sub)
+//            }
         }
 
     }
@@ -789,29 +666,38 @@ class StoryActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onRestart() {
+        super.onRestart()
+//        if (mInterstitialAd != null) {
+//            mInterstitialAd?.show(this@StoryActivity)
+//            PrefKey(this).putInt("count", 0)
+//        }
+    }
+
     override fun onBackPressed() {
         val intent = Intent(this, TitleActivity::class.java)
-        intent.putExtra("name", Tag)
+        intent.putExtra("name", tag)
         startActivity(intent)
 
         finish()
 
-        if (mInterstitialAd != null) {
+        if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
             mInterstitialAd?.show(this@StoryActivity)
+            PrefKey(this).putInt("count", 0)
         }
 
         overridePendingTransition(R.anim.activity_down_sub, R.anim.activity_down)
     }
 
     //전체화면
-    private fun fullScreenMode(switch : Boolean){
+    private fun fullScreenMode(switch: Boolean) {
         var uiOption = window.decorView.systemUiVisibility
-        if(switch){
-            uiOption =  View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+        if (switch) {
+            uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                     View.SYSTEM_UI_FLAG_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        }else {
-            uiOption =  View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        } else {
+            uiOption = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
         window.decorView.setSystemUiVisibility(uiOption)

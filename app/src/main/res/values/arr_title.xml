@@ -5,17 +5,17 @@
 
     <string-array name="name">
 
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-            <!--0-->
+        <!--        <item></item>-->
+        <!--        <item></item>-->
+        <!--        <item></item>-->
+        <!--        <item></item>-->
+        <!--        <item></item>-->
+        <!--        <item></item>-->
+        <!--        <item></item>-->
+        <!--        <item></item>-->
+        <!--        <item></item>-->
+        <!--        <item></item>-->
+        <!--0-->
         <!--0-->
         <item>텅빈 우물</item>
         <item>지하도</item>
@@ -87,7 +87,7 @@
         <item>캡슐</item>
         <item>갓난 아기</item>
         <item>사진을 찍은 날짜</item>
-         <!--60-->
+        <!--60-->
 
         <item>청산가리 수박</item>
         <item>무슨 소원이든 말해봐</item>
@@ -131,8 +131,8 @@
         <item>시멘트 포대</item>
         <item>그러면 이제 갈까?</item>
         <item>버스사고</item>
-        <item>전학생의 누나</item>
         <item>낙석 사고</item>
+        <item>전학생의 누나</item>
         <item>누군가 보고 있다.</item>
         <item>마지막 생일</item>
         <!--100-->
@@ -149,41 +149,113 @@
         <item>부관(조언자)</item>
         <!--110-->
 
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        &lt;!&ndash;120&ndash;&gt;-->
+        <item>시험</item>
+        <item>의사</item>
+        <item>손가락의 형태</item>
+        <item>거울</item>
+        <item>식귀</item>
+        <item>동전치기</item>
+        <item>베스트프랜드</item>
+        <item>바람둥이의 최후</item>
+        <item>라이터</item>
+        <item>집에 오는 길에..</item>
+        <!--120-->
 
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        &lt;!&ndash;130&ndash;&gt;-->
+        <item>2줄 괴담 1편</item>
+        <item>2줄 괴담 2편</item>
+        <item>2줄 괴담 3편</item>
+        <item>장난감</item>
+        <item>돌아온 아내</item>
+        <item>관뚜껑</item>
+        <item>조난자</item>
+        <item>몽유병</item>
+        <item>엘레베이터</item>
+        <item>숨바꼭질</item>
+        <!--130-->
 
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        <item></item>-->
-<!--        &lt;!&ndash;140&ndash;&gt;-->
+        <item>2줄 괴담 4편</item>
+        <item>2줄 괴담 5편</item>
+        <item>2줄 괴담 6편</item>
+        <item>학교</item>
+        <item>생물실의 미스터리</item>
+        <item>지하철의 어린이</item>
+        <item>여동생</item>
+        <item>여우창문</item>
+        <item>소음</item>
+        <item>자취방</item>
+        <!--140-->
+
+        <item>질투가 불러온 비극</item>
+        <item>울음</item>
+        <item>한 가지 불행</item>
+        <item>2줄 괴담 7편</item>
+        <item>2줄 괴담 8편</item>
+        <item>2줄 괴담 9편</item>
+        <item>지구의 소원</item>
+        <item>빈 집의 대화</item>
+        <item>허수아비</item>
+        <item>철도</item>
+        <!--150-->
+
+        <item>카페트</item>
+        <item>약초의 효능</item>
+        <item>풀 수 없는 문제</item>
+        <item>유리창</item>
+        <item>불가능한 자살</item>
+        <item>오른손</item>
+        <item>유령의 집</item>
+        <item>누나의 심부름</item>
+        <item>거울에 비치는 그림자</item>
+        <item>아들의 예지</item>
+        <!--160-->
+
+        <item>100살을 만들어라</item>
+        <item>전쟁놀이</item>
+        <item>바퀴벌레</item>
+        <item>정전과 경비아저씨</item>
+        <item>그녀의 전화</item>
+        <item>벽</item>
+        <item>요리교실수업</item>
+        <item>역 화장실</item>
+        <item>장수풍뎅이</item>
+        <item>전 여친 이야기</item>
+        <!--170-->
+
+        <item>어느 응급환자</item>
+        <item>얼굴을 모르는 부모</item>
+        <item>노크</item>
+        <item>한 밤중 취객</item>
+        <item>친구들</item>
+        <item>악몽</item>
+        <item>샤워 중 손님</item>
+        <item>아내</item>
+        <item>지하철의 어떤 남자</item>
+        <item>거짓말 맞추기 대회</item>
+        <!--180-->
+
+        <item>회춘하는 기술</item>
+        <item>가장 밝은 빛</item>
+        <item>낮선 남자</item>
+        <item>감옥</item>
+        <item>초록 이끼</item>
+        <item>내옆에 귀신 서있어</item>
+        <item>놀이공원 귀신의 집</item>
+        <item>페가 체험</item>
+        <item>옆집에 소음</item>
+        <item>요리하는 남자</item>
+        <!--190-->
+
+        <item>어떤 부자</item>
+        <item>갈매기 고기</item>
+        <item>저주 받은 가면</item>
+        <item>유령을 보는 아이</item>
+        <item>야자시간</item>
+        <item>대피소</item>
+        <item>악마의 구원</item>
+        <item>귀신을 보는 녀석</item>
+        <item>완벽한 공표영화</item>
+        <item>Short 모음</item>
+        <!--200-->
 
     </string-array>
 

@@ -22,7 +22,7 @@
                 app:showAsAction="never"/>
 
             <item
-                android:icon="@drawable/email_btn"
+                android:icon="@android:drawable/ic_dialog_email"
                 android:title="문의하기"
                 app:showAsAction="never">
 
