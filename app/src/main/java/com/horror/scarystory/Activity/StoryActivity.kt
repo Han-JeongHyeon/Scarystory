@@ -33,6 +33,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.horror.scarystory.Adapter.AdapterData
+import com.horror.scarystory.MyApplication
 import com.horror.scarystory.PrefKey
 import com.horror.scarystory.R
 import com.horror.scarystory.Story.*
@@ -57,6 +58,12 @@ class StoryActivity : AppCompatActivity() {
 
     private var mInterstitialAd: InterstitialAd? = null
 
+    companion object {
+        var position = 0
+        var tag = ""
+        var title = ""
+    }
+
     fun addAd() {
         MobileAds.initialize(this) {}
 
@@ -75,6 +82,11 @@ class StoryActivity : AppCompatActivity() {
 
             override fun onAdLoaded() {}
         }
+
+    }
+
+    fun interstitialAd() {
+        val adRequest = AdRequest.Builder().build()
 
         //광고 단가 높음
         InterstitialAd.load(this@StoryActivity,
@@ -122,18 +134,13 @@ class StoryActivity : AppCompatActivity() {
 
     }
 
-    companion object {
-        var position = 0
-        var tag = ""
-        var title = ""
-    }
-
     fun setStory() {
         val TitleBar = findViewById<TextView>(R.id.top_title)
 
         val value: String = when (position / 100) {
             0 -> story0.getStory(position)
             1 -> story1.getStory(position % 100)
+            2 -> story2.getStory(position % 200)
             else -> {
                 "null"
             }
@@ -196,6 +203,7 @@ class StoryActivity : AppCompatActivity() {
 
         setupInterstitialAd()
         addAd()
+        interstitialAd()
         setStory()
 
         //툴바
@@ -296,26 +304,39 @@ class StoryActivity : AppCompatActivity() {
         }
 
         binding.InterBtn.setOnClickListener {
-            if (binding.interLayout.visibility == View.VISIBLE) {
-                binding.interLayout.visibility = View.INVISIBLE
-                Handler().postDelayed(Runnable {
-                    binding.InterBtn.visibility = View.VISIBLE
-                }, 700)
-                binding.interLayout.startAnimation(
-                    AnimationUtils.loadAnimation(
-                        applicationContext,
-                        R.anim.inter_down
+            var interCount = PrefKey(this).getInt("inter", 10)
+            if (PrefKey(this).getBoolean("interClick_$position", false)
+                || interCount > 0) {
+
+                if (!PrefKey(this).getBoolean("interClick_$position", false) && interCount > 0) {
+                    Toast.makeText(this, "해석권 하나를 사용했습니다.", Toast.LENGTH_SHORT).show()
+                    PrefKey(this).putInt("inter", interCount - 1)
+                    PrefKey(this).putBoolean("interClick_$position", true)
+                }
+
+                if (binding.interLayout.visibility == View.VISIBLE) {
+                    binding.interLayout.visibility = View.INVISIBLE
+                    Handler().postDelayed(Runnable {
+                        binding.InterBtn.visibility = View.VISIBLE
+                    }, 700)
+                    binding.interLayout.startAnimation(
+                        AnimationUtils.loadAnimation(
+                            applicationContext,
+                            R.anim.inter_down
+                        )
                     )
-                )
+                } else {
+                    binding.interLayout.visibility = View.VISIBLE
+                    binding.InterBtn.visibility = View.INVISIBLE
+                    binding.interLayout.startAnimation(
+                        AnimationUtils.loadAnimation(
+                            applicationContext,
+                            R.anim.inter_up
+                        )
+                    )
+                }
             } else {
-                binding.interLayout.visibility = View.VISIBLE
-                binding.InterBtn.visibility = View.INVISIBLE
-                binding.interLayout.startAnimation(
-                    AnimationUtils.loadAnimation(
-                        applicationContext,
-                        R.anim.inter_up
-                    )
-                )
+                Toast.makeText(this, "해석권이 부족합니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -630,27 +651,37 @@ class StoryActivity : AppCompatActivity() {
             binding.scroll.scrollTo(0,0)
             setStory()
 
-            var Advertising = PrefKey(this).getInt("count", 0)
+            if(binding.interLayout.visibility == View.VISIBLE) {
+                binding.interLayout.visibility = View.INVISIBLE
+                Handler().postDelayed(Runnable {
+                    binding.InterBtn.visibility = View.VISIBLE
+                }, 700)
+                binding.interLayout.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        applicationContext,
+                        R.anim.inter_down
+                    )
+                )
+            }
+
+            val Advertising = PrefKey(this).getInt("count", 0)
 
             PrefKey(this).putInt("count", Advertising + 1)
 
             if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
                 mInterstitialAd?.show(this@StoryActivity)
-                addAd()
+                interstitialAd()
                 PrefKey(this).putInt("count", 0)
             }
 
-//            if (Location == "Left") {
-//                binding.root.startAnimation(
-//                    AnimationUtils.loadAnimation(
-//                        application,
-//                        R.anim.activity_left
-//                    )
-//                )
-//                overridePendingTransition(R.anim.activity_left, R.anim.activity_left_sub)
-//            } else {
-//                overridePendingTransition(R.anim.activity_right, R.anim.activity_right_sub)
-//            }
+            binding.llAnime.startAnimation(
+                AnimationUtils.loadAnimation(
+                    this,
+                    if (Location == "Left") R.anim.activity_left
+                    else R.anim.activity_right
+                )
+            )
+
         }
 
     }
@@ -664,14 +695,6 @@ class StoryActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.story_menu, menu)
         return true
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-//        if (mInterstitialAd != null) {
-//            mInterstitialAd?.show(this@StoryActivity)
-//            PrefKey(this).putInt("count", 0)
-//        }
     }
 
     override fun onBackPressed() {
@@ -701,5 +724,19 @@ class StoryActivity : AppCompatActivity() {
             View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
         window.decorView.setSystemUiVisibility(uiOption)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
+        Log.d("TAG", "onRestart")
+        val application = application as? MyApplication
+
+        application?.showAdIfAvailable(
+            this@StoryActivity,
+            object : MyApplication.OnShowAdCompleteListener {
+                override fun onShowAdComplete() {
+                }
+            })
     }
 }

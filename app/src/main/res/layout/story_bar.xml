@@ -19,18 +19,13 @@
         <Button
             android:id="@+id/beck_btn"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="25dp"
             android:layout_gravity="center"
             android:background="@drawable/back_btn" />
 
-        <Button
-            android:id="@+id/fake"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:background="#00ff0000"
-            android:visibility="gone"/>
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
 
         <TextView
             android:id="@+id/top_title"
@@ -42,9 +37,10 @@
             android:background="#2a2b30"
             android:singleLine="true"
             android:gravity="center"
-            android:text=""
+            android:text="asdasdasdasd"
+            android:fontFamily="@font/bitro"
             android:textColor="@color/white"
-            android:textSize="25dp" />
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/bookmark"

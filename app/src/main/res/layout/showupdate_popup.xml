@@ -9,15 +9,27 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="이야기가 재밌었다면\n리뷰를 달아주세요!!"
-        android:textColor="@color/white"
+        android:textColor="#DFDFDF"
         android:fontFamily="@font/jsarirang"
-        android:textSize="23dp"
+        android:textSize="25dp"
         android:textStyle="bold" />
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="옆에서 몰래 보고있는 당신도..."
+        android:textColor="#989898"
+        android:fontFamily="@font/jsarirang"
+        android:textSize="12dp"
+        android:textStyle="bold" />
+
+    <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#9A9A9A"/>
@@ -25,25 +37,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/btnYes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:fontFamily="@font/jsarirang"
-            android:background="#00ff0000"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:text="리뷰 달기"
-            />
-
-        <TextView
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:background="#9A9A9A"/>
 
         <Button
             android:id="@+id/btnNo"
@@ -54,9 +47,28 @@
             android:fontFamily="@font/jsarirang"
             android:gravity="center"
             android:text="아니요"
-            android:textColor="@color/white"
+            android:textColor="#DFDFDF"
             android:textSize="20dp"
             android:textStyle="bold" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#9A9A9A"/>
+
+        <Button
+            android:id="@+id/btnYes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#DFDFDF"
+            android:fontFamily="@font/jsarirang"
+            android:background="#00ff0000"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="리뷰 달기"
+            />
 
     </LinearLayout>
 </LinearLayout>

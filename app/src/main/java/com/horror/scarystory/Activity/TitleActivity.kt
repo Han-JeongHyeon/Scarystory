@@ -1,5 +1,6 @@
 package com.horror.scarystory.Activity
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
@@ -15,18 +17,23 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.MobileAds
+import androidx.core.content.ContextCompat
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.horror.scarystory.Adapter.Adapter
 import com.horror.scarystory.Adapter.AdapterData
+import com.horror.scarystory.MyApplication
 import com.horror.scarystory.PrefKey
 import com.horror.scarystory.R
 import com.horror.scarystory.databinding.ActivityTitleBinding
 import kotlinx.android.synthetic.main.activity_title.*
+import kotlinx.android.synthetic.main.tiele_bar.*
+import kotlinx.android.synthetic.main.tiele_bar.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,20 +48,22 @@ class TitleActivity : AppCompatActivity() {
     lateinit var adapter: Adapter
     val datas = mutableListOf<AdapterData>()
 
-    companion object {
-        var time = 0L
-    }
-
     var titleTop: TextView? = null
+
+    //뒤로가기 시간체크
+    var time = 0L
+
+    private var mRewardedAd: RewardedAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         loadAd()
+        loadRewardedAd()
         setOnClickListener()
         setBottomSeat()
-        dialog()
+        reviewDialog()
 
         adapter = Adapter(this).apply {
             setOnItemClickListener(object : Adapter.OnItemClickListener { // 이벤트 리스너
@@ -63,21 +72,21 @@ class TitleActivity : AppCompatActivity() {
                 }
             })
         }
+
         binding.RecycleView.adapter = adapter
 
-        btnAll.setTextColor(Color.parseColor("#FFFFFF"))
+        btnAll.setTextColor(ContextCompat.getColor(this, R.color.textColor))
 
         //툴바
         val toolbar = findViewById<Toolbar>(R.id.Title_bar)
+        toolbar.title = ""
         setSupportActionBar(toolbar)
 
         titleTop = findViewById<TextView>(R.id.title)
 
-        ViewUpdate("All")
+        amount.text = PrefKey(this).getInt("inter",10).toString()
 
-//        binding.swAm.isChecked = PrefKey(this).getBoolean("AM_ON", true)
-//        binding.swPm.isChecked = PrefKey(this).getBoolean("PM_ON", true)
-//        binding.swUpdate.isChecked = PrefKey(this).getBoolean("UPDATE_ON", true)
+        ViewUpdate("All")
 
         binding.fullScreen.isChecked = PrefKey(this).getBoolean("fullScreen", false)
         fullScreenMode(binding.fullScreen.isChecked)
@@ -103,7 +112,56 @@ class TitleActivity : AppCompatActivity() {
         }
     }
 
-    fun dialog(){
+    fun loadRewardedAd(){
+        val adRequest = AdRequest.Builder().build()
+        RewardedAd.load(
+            this, "ca-app-pub-8461307543970328/9609175369", adRequest, object : RewardedAdLoadCallback(){
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+                    mRewardedAd = null
+                }
+                override fun onAdLoaded(p0: RewardedAd) {
+                    mRewardedAd = p0
+                }
+            }
+        )
+
+    }
+
+    fun showRewardedAd(){
+        if (mRewardedAd != null){
+            mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback(){
+                override fun onAdDismissedFullScreenContent() {
+                    Log.d("TAG", "Ad was dismissed")
+                    mRewardedAd = null
+                    loadRewardedAd()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                    Log.d("TAG", "Ad failed to show.")
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    Log.d("TAG", "Ad showed fullscreen content.")
+                    mRewardedAd = null
+                }
+            }
+
+            mRewardedAd?.show(this, OnUserEarnedRewardListener() { rewardItem ->
+                val rewardAmount = rewardItem.amount + PrefKey(this).getInt("inter", 10)
+
+                PrefKey(this).putInt("inter", rewardAmount)
+
+                amount.text = PrefKey(this).getInt("inter", 10).toString()
+
+            })
+
+        } else {
+            Log.d("TAG", "The rewarded ad was not loaded yet")
+            Toast.makeText(this, "현재 광고가 준비되지 않았습니다.\n나중에 다시 해주세요.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun reviewDialog(){
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.showupdate_popup)
@@ -180,7 +238,6 @@ class TitleActivity : AppCompatActivity() {
             btnAll.setOnClickListener {
                 ViewUpdate("All")
             }
-
             btnUnread.setOnClickListener {
                 ViewUpdate("Unread")
             }
@@ -206,30 +263,54 @@ class TitleActivity : AppCompatActivity() {
                 fullScreenMode(isChecked)
             }
 
-//            swAm.setOnCheckedChangeListener { compoundButton, isChecked ->
-//                PrefKey(this@TitleActivity).putBoolean("AM_ON", isChecked)
-//            }
-//
-//            swPm.setOnCheckedChangeListener { compoundButton, isChecked ->
-//                PrefKey(this@TitleActivity).putBoolean("PM_ON", isChecked)
-//            }
-//
-//            swUpdate.setOnCheckedChangeListener { compoundButton, isChecked ->
-//                PrefKey(this@TitleActivity).putBoolean("UPDATE_ON", isChecked)
-//            }
+            ll_cpn.setOnClickListener {
+                if (PrefKey(this@TitleActivity).getBoolean("popupShow", true)) {
+                    PrefKey(this@TitleActivity).putBoolean("popupShow", false)
+                    val dialog = Dialog(this@TitleActivity)
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog.setContentView(R.layout.popup_)
+
+                    dialog.show()
+
+                    val btnNo = dialog.findViewById<Button>(R.id.btnNo)
+
+                    btnNo.setOnClickListener {
+                        dialog.dismiss()
+                    }
+
+                } else {
+                    val dialog = Dialog(this@TitleActivity)
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog.setContentView(R.layout.popup)
+
+                    dialog.show()
+
+                    val btnNo = dialog.findViewById<Button>(R.id.btnNo)
+                    val btnYes = dialog.findViewById<Button>(R.id.btnYes)
+
+                    btnNo.setOnClickListener {
+                        dialog.dismiss()
+                    }
+
+                    btnYes.setOnClickListener {
+                        showRewardedAd()
+                        dialog.dismiss()
+                    }
+                }
+
+            }
         }
     }
 
     fun setBottomSeat() {
         binding.apply {
-            btnAll.setTextColor(Color.parseColor("#A5A5A5"))
-            btnUnread.setTextColor(Color.parseColor("#A5A5A5"))
-            btnBookmark.setTextColor(Color.parseColor("#A5A5A5"))
-            btnSetting.setTextColor(Color.parseColor("#A5A5A5"))
+            val bottomSeat = ContextCompat.getColor(this@TitleActivity, R.color.bottom_seat);
+            btnAll.setTextColor(bottomSeat)
+            btnUnread.setTextColor(bottomSeat)
+            btnBookmark.setTextColor(bottomSeat)
+            btnSetting.setTextColor(bottomSeat)
         }
     }
-
-    var viewName = ""
 
     //뷰에 텍스트 넣기
     fun ViewUpdate(name: String): Boolean {
@@ -241,17 +322,14 @@ class TitleActivity : AppCompatActivity() {
         setBottomSeat()
 
         if (name == "Setting") {
-            binding.btnSetting.setTextColor(Color.parseColor("#FFFFFF"))
-            viewName = name
+            binding.btnSetting.setTextColor(ContextCompat.getColor(this, R.color.textColor))
             binding.RecycleView.visibility = View.GONE
             binding.llSetting.visibility = View.VISIBLE
 
-            return true
+        } else {
+            binding.RecycleView.visibility = View.VISIBLE
+            binding.llSetting.visibility = View.GONE
         }
-
-        viewName = name
-        binding.RecycleView.visibility = View.VISIBLE
-        binding.llSetting.visibility = View.GONE
 
         setViewSetting(name)
 
@@ -315,19 +393,16 @@ class TitleActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 when(name) {
                     "All" -> {
-                        binding.btnAll.setTextColor(Color.parseColor("#FFFFFF"))
-//                            type?.text = "전체"
+                        binding.btnAll.setTextColor(ContextCompat.getColor(this@TitleActivity, R.color.textColor))
                     }
                     "Unread" -> {
-                        binding.btnUnread.setTextColor(Color.parseColor("#FFFFFF"))
-//                            type?.text = "안본글"
+                        binding.btnUnread.setTextColor(ContextCompat.getColor(this@TitleActivity, R.color.textColor))
                     }
                     "Bookmark" -> {
-                        binding.btnBookmark.setTextColor(Color.parseColor("#FFFFFF"))
-//                            type?.text = "즐겨찾기"
+                        binding.btnBookmark.setTextColor(ContextCompat.getColor(this@TitleActivity, R.color.textColor))
                     }
                     "Search" -> {
-                        binding.btnAll.setTextColor(Color.parseColor("#FFFFFF"))
+                        binding.btnAll.setTextColor(ContextCompat.getColor(this@TitleActivity, R.color.textColor))
                         titleTop?.text = PrefKey(this@TitleActivity).getString("Search_Word", "")
                     }
                 }
@@ -369,15 +444,27 @@ class TitleActivity : AppCompatActivity() {
         window.decorView.setSystemUiVisibility(uiOption)
     }
 
-    var time = 0L
-
     //뒤로가기 버튼
     override fun onBackPressed() {
-        if(System.currentTimeMillis() - time <= 2500L) {
+        if(System.currentTimeMillis() - time <= 2500) {
             finish()
+        } else {
+            Toast.makeText(this, "앱을 종료하기 위해 '뒤로' 버튼을 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show()
+            time = System.currentTimeMillis()
         }
-        Toast.makeText(this, "앱을 종료하기 위해 '뒤로' 버튼을 한번 더 눌러주세요.",Toast.LENGTH_SHORT).show()
-        time = System.currentTimeMillis()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
+        val application = application as? MyApplication
+
+        application?.showAdIfAvailable(
+            this@TitleActivity,
+            object : MyApplication.OnShowAdCompleteListener {
+                override fun onShowAdComplete() {
+                }
+            })
     }
 
 }

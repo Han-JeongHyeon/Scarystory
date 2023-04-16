@@ -13,4 +13,7 @@
     <color name="skyBlue">#87CEEB</color>
 
     <color name="gray">#2a2b30</color>
+
+    <color name="bottom_seat">#A5A5A5</color>
+    <color name="textColor">#DFDFDF</color>
 </resources>

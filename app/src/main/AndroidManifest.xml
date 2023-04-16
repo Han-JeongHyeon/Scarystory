@@ -10,7 +10,8 @@
         android:label="이해하면 무서운 이야기"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HorrorKotlin">
+        android:theme="@style/Theme.HorrorKotlin"
+        android:name="com.horror.scarystory.MyApplication">
 
         <service android:name=".MessagingService"
             android:exported="false">
