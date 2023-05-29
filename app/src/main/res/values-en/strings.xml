@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">horrorKotlin</string>
+    <string name="닫기">Close</string>
+    <string name="아니요">No</string>
+    <string name="전체">All</string>
+    <string name="안본글">Unread</string>
+    <string name="북마크">Bookmark</string>
+    <string name="설정">Setting</string>
+    <string name="검색">Search</string>
+    <string name="문의">Inquiry</string>
+    <string name="문의_업데이트">Update inquiry</string>
+    <string name="문의_오류">Error inquiry</string>
+    <string name="설정_전체화면">Keep full screen</string>
+    <string name="확인">Confirm</string>
+    <string name="네">Yes</string>
+    <string name="광고보기">View ads</string>
+    <string name="광고_해석권">Watch an advertisement and obtain 10 interpretation rights</string>
+    <string name="해석권_설명">Interpretation rights are coupons that display interpretations. You are initially given 10, and afterward, you can obtain more through advertisements.</string>
+</resources>

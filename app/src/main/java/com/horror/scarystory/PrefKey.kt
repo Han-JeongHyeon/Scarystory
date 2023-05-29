@@ -1,4 +1,5 @@
 package com.horror.scarystory
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
@@ -24,11 +25,13 @@ class PrefKey(val context: Context) {
         return setShared.getString(name, default)
     }
 
-    fun putString(name: String, default: String){
+    fun putString(name: String, default: String): String{
         val setShared = context.getSharedPreferences(name, 0)
         val _setShared = setShared.edit()
         _setShared.putString(name, default)
         _setShared.apply()
+
+        return default
     }
 
     fun getBoolean(name: String, default: Boolean): Boolean {

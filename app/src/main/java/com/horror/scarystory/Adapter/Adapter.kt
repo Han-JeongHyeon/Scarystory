@@ -49,10 +49,9 @@ class Adapter(private val context: Context) : RecyclerView.Adapter<Adapter.ViewH
             listNumber.setTextColor(Color.parseColor(color))
 
             itemView.setOnClickListener {
-
                 val intent = Intent(context, StoryActivity::class.java)
                 intent.putExtra("position",item.position)
-                intent.putExtra("tag",item.tag)
+//                intent.putExtra("tag",item.tag)
                 intent.run {
                     context.startActivity(this)
                 }

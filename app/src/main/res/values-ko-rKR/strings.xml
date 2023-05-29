@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">horrorKotlin</string>
-    <string name="AD" translatable="false">ca-app-pub-8461307543970328/1041975543</string>
     <string name="닫기">닫기</string>
     <string name="아니요">아니요</string>
     <string name="전체">전체</string>
@@ -16,5 +16,5 @@
     <string name="네">네</string>
     <string name="광고보기">광고 보기</string>
     <string name="광고_해석권">광고보고 해석권 10개 획득하기</string>
-    <string name="해석권_설명">해석권은 해석을 보여주는 쿠폰입니다\\n\\t\\t처음 10개가 주어지고 그 후 광고를 \\t\\t\\\t통해서 얻을 수 있습니다.</string>
+    <string name="해석권_설명">해석권은 해석을 보여주는 쿠폰입니다\n\t\t처음 10개가 주어지고 그 후 광고를 \t\t\t통해서 얻을 수 있습니다.</string>
 </resources>

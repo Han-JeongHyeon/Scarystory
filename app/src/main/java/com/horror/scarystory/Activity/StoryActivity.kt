@@ -32,9 +32,8 @@ import com.google.android.gms.ads.initialization.InitializationStatus
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.horror.scarystory.*
 import com.horror.scarystory.Adapter.AdapterData
-import com.horror.scarystory.MyApplication
-import com.horror.scarystory.PrefKey
 import com.horror.scarystory.R
 import com.horror.scarystory.Story.*
 import com.horror.scarystory.databinding.ActivityStoryBinding
@@ -57,6 +56,8 @@ class StoryActivity : AppCompatActivity() {
     var Bookmark: Button? = null
 
     private var mInterstitialAd: InterstitialAd? = null
+
+    var Title: Array<String> = listOf<String>().toTypedArray()
 
     companion object {
         var position = 0
@@ -174,31 +175,30 @@ class StoryActivity : AppCompatActivity() {
             }
         }
 
-        getBtn("Home", tag)
+        getBtn(Type.HOME.code)
 
         //폰트 사이즈 변경
         getSeek(PrefKey(this).getInt("seek", 22))
 
         //폰트 가져오기
-        getFont(PrefKey(this).getInt("font", 1), "")
+        getFont(PrefKey(this).getInt("font", 1))
     }
 
-    var Title: Array<String> = listOf<String>().toTypedArray()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        Bookmark = findViewById<Button>(R.id.bookmark)
+        Bookmark = findViewById(R.id.bookmark)
         Title = resources.getStringArray(R.array.name)
+        tag = PrefKey(this).getString("Tag", "All")!!
         val backBtn = findViewById<Button>(R.id.beck_btn)
 
         //전체화면 호출
         fullScreenMode(PrefKey(this).getBoolean("fullScreen", false))
 
         position = intent.getIntExtra("position", -1)
-        tag = intent.getStringExtra("tag").toString()
         title = Title[position]
 
         setupInterstitialAd()
@@ -212,18 +212,8 @@ class StoryActivity : AppCompatActivity() {
 
         //백 버튼
         backBtn.setOnClickListener {
-            val intent = Intent(this, TitleActivity::class.java)
-            intent.putExtra("name", tag)
-            startActivity(intent)
-
-            finish()
-
-            if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
-                mInterstitialAd?.show(this@StoryActivity)
-                PrefKey(this).putInt("count", 0)
-            }
-
-            overridePendingTransition(R.anim.activity_down_sub, R.anim.activity_down)
+            ChangeIntent(this@StoryActivity, TitleActivity::class.java, "story")
+            screenAdShow()
         }
 
         //북마크 표시
@@ -242,30 +232,30 @@ class StoryActivity : AppCompatActivity() {
 
         //다음 이야기로 이동
         binding.leftBtn.setOnClickListener {
-            getBtn("Left", tag)
+            getBtn(Type.LEFT.code)
         }
 
         binding.rightBtn.setOnClickListener {
-            getBtn("Right", tag)
+            getBtn(Type.RIGHT.code)
         }
 
         //리스트 화면을 터치하면
         binding.Layout.setOnClickListener {
-            getBtn("Option", tag)
+            getBtn(Type.OPTION.code)
         }
 
         //스크롤 화면을 터치하면
         binding.scroll.setOnClickListener {
-            getBtn("Option", tag)
+            getBtn(Type.OPTION.code)
         }
 
         //스크롤을 내리거나 올리면
         binding.scroll.setOnScrollChangeListener { view, i, i2, i3, i4 ->
             if (Tool_bar?.visibility == View.VISIBLE) {
-                getBtn("Option", tag)
+                getBtn(Type.OPTION.code)
             }
             if (!view.canScrollVertically(1) || !view.canScrollVertically(-1)) {
-                getBtn("Option", tag)
+                getBtn(Type.OPTION.code)
             }
         }
 
@@ -291,16 +281,16 @@ class StoryActivity : AppCompatActivity() {
         })
 
         binding.font1.setOnClickListener {
-            getFont(1, "btn")
+            getFont(1)
         }
         binding.font2.setOnClickListener {
-            getFont(2, "btn")
+            getFont(2)
         }
         binding.font3.setOnClickListener {
-            getFont(3, "btn")
+            getFont(3)
         }
         binding.font4.setOnClickListener {
-            getFont(4, "btn")
+            getFont(4)
         }
 
         binding.InterBtn.setOnClickListener {
@@ -368,46 +358,46 @@ class StoryActivity : AppCompatActivity() {
     }
 
     //폰트 설정
-    fun getFont(Value: Int?, type: String) {
+    fun getFont(Value: Int) {
+        val On_Stroke = R.drawable.stroke_btn_w
+        val Off_Stroke = R.drawable.stroke_btn
+        val White = "#FFFFFF"
+        val Gray = "#7A7A7A"
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
-            if (type == "btn") {
+//            if (type == "btn") {
                 Toast.makeText(this, "현재 기기는 폰트 변경이 불가능합니다.", Toast.LENGTH_SHORT).show()
-            } else {
+//            } else {
                 binding.story.typeface = Typeface.createFromAsset(assets, "font/yoondokrip.ttf")
-            }
+//            }
             return
-        } else {
-            val On_Stroke = R.drawable.stroke_btn_w
-            val Off_Stroke = R.drawable.stroke_btn
-            val White = "#FFFFFF"
-            val Gray = "#7A7A7A"
-
-            binding.font1.setBackgroundResource(if (Value == 1) On_Stroke else Off_Stroke)
-            binding.font1.setTextColor(Color.parseColor(if (Value == 1) White else Gray))
-            if (Value == 1) {
-                binding.story.typeface = Typeface.createFromAsset(assets, "font/yoondokrip.ttf")
-            }
-
-            binding.font2.setBackgroundResource(if (Value == 2) On_Stroke else Off_Stroke)
-            binding.font2.setTextColor(Color.parseColor(if (Value == 2) White else Gray))
-            if (Value == 2) {
-                binding.story.typeface = Typeface.createFromAsset(assets, "font/bm.ttf")
-            }
-
-            binding.font3.setBackgroundResource(if (Value == 3) On_Stroke else Off_Stroke)
-            binding.font3.setTextColor(Color.parseColor(if (Value == 3) White else Gray))
-            if (Value == 3) {
-                binding.story.typeface = Typeface.createFromAsset(assets, "font/bitrofri.ttf")
-            }
-
-            binding.font4.setBackgroundResource(if (Value == 4) On_Stroke else Off_Stroke)
-            binding.font4.setTextColor(Color.parseColor(if (Value == 4) White else Gray))
-            if (Value == 4) {
-                binding.story.typeface = Typeface.createFromAsset(assets, "font/nanum.ttf")
-            }
-
-            PrefKey(this).putInt("font", Value!!)
         }
+
+        binding.font1.setBackgroundResource(if (Value == 1) On_Stroke else Off_Stroke)
+        binding.font1.setTextColor(Color.parseColor(if (Value == 1) White else Gray))
+        if (Value == 1) {
+            binding.story.typeface = Typeface.createFromAsset(assets, "font/yoondokrip.ttf")
+        }
+
+        binding.font2.setBackgroundResource(if (Value == 2) On_Stroke else Off_Stroke)
+        binding.font2.setTextColor(Color.parseColor(if (Value == 2) White else Gray))
+        if (Value == 2) {
+            binding.story.typeface = Typeface.createFromAsset(assets, "font/bm.ttf")
+        }
+
+        binding.font3.setBackgroundResource(if (Value == 3) On_Stroke else Off_Stroke)
+        binding.font3.setTextColor(Color.parseColor(if (Value == 3) White else Gray))
+        if (Value == 3) {
+            binding.story.typeface = Typeface.createFromAsset(assets, "font/bitrofri.ttf")
+        }
+
+        binding.font4.setBackgroundResource(if (Value == 4) On_Stroke else Off_Stroke)
+        binding.font4.setTextColor(Color.parseColor(if (Value == 4) White else Gray))
+        if (Value == 4) {
+            binding.story.typeface = Typeface.createFromAsset(assets, "font/nanum.ttf")
+        }
+
+        PrefKey(this).putInt("font", Value)
     }
 
     //메뉴
@@ -482,10 +472,10 @@ class StoryActivity : AppCompatActivity() {
     }
 
     //버튼 표시 & 화면 인텐트
-    fun getBtn(Location: String, Tag: String) {
-        var title = resources.getStringArray(R.array.name)
+    fun getBtn(Location: String) {
+        val title = resources.getStringArray(R.array.name)
 
-        var numvalue = title.size
+        val numvalue = title.size
 
         fullScreenMode(PrefKey(this).getBoolean("fullScreen", false))
 
@@ -494,8 +484,8 @@ class StoryActivity : AppCompatActivity() {
         val up = AnimationUtils.loadAnimation(applicationContext, R.anim.toolbar_up)
         val down = AnimationUtils.loadAnimation(applicationContext, R.anim.toolbar_down)
 
-        when (Tag) {
-            "All" -> {
+        when (tag) {
+            Type.ALL.code -> {
                 if (position != 0) {
                     binding.leftBtn.visibility = View.VISIBLE
                 } else {
@@ -513,7 +503,7 @@ class StoryActivity : AppCompatActivity() {
                     position += 1
                 }
             }
-            "Unread" -> {
+            Type.UNREAD.code -> {
                 for (i in posi downTo 0) {
                     val liboolean = getSharedPreferences("li_boolean_${i}", Context.MODE_PRIVATE)
                     ////Left 다음 이야기 체크
@@ -547,7 +537,7 @@ class StoryActivity : AppCompatActivity() {
                     }
                 }
             }
-            "Bookmark" -> {
+            Type.BOOKMARK.code -> {
                 for (i in (posi - 1) downTo -1) {
                     val favorboolean =
                         getSharedPreferences("favor_boolean_${i}", Context.MODE_PRIVATE)
@@ -583,7 +573,7 @@ class StoryActivity : AppCompatActivity() {
                     }
                 }
             }
-            "Search" -> {
+            Type.SEARCH.code -> {
                 val Search_Word = getSharedPreferences("Search_Word", 0)
                 Search_Word.getString("Search_Word", "")
                 binding.leftBtn.visibility = View.INVISIBLE
@@ -618,7 +608,7 @@ class StoryActivity : AppCompatActivity() {
         }
 
         //버튼을 화면에 표시/표시 안함
-        if (Location == "Option") {
+        if (Location == Type.OPTION.code) {
             if (Tool_bar?.visibility == View.VISIBLE) {
                 binding.leftBtn.visibility = View.INVISIBLE
                 binding.rightBtn.visibility = View.INVISIBLE
@@ -647,7 +637,7 @@ class StoryActivity : AppCompatActivity() {
             }
         }
 
-        if (Location == "Left" || Location == "Right") {
+        if (Location == Type.LEFT.code || Location == Type.RIGHT.code) {
             binding.scroll.scrollTo(0,0)
             setStory()
 
@@ -664,20 +654,22 @@ class StoryActivity : AppCompatActivity() {
                 )
             }
 
-            val Advertising = PrefKey(this).getInt("count", 0)
+//            val advertising = PrefKey(this).getInt("count", 0)
 
-            PrefKey(this).putInt("count", Advertising + 1)
+            PrefKey(this).putInt("count", PrefKey(this).getInt("count", 0) + 1)
 
-            if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
-                mInterstitialAd?.show(this@StoryActivity)
-                interstitialAd()
-                PrefKey(this).putInt("count", 0)
-            }
+            screenAdShow()
+
+//            if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
+//                mInterstitialAd?.show(this@StoryActivity)
+//                interstitialAd()
+//                PrefKey(this).putInt("count", 0)
+//            }
 
             binding.llAnime.startAnimation(
                 AnimationUtils.loadAnimation(
                     this,
-                    if (Location == "Left") R.anim.activity_left
+                    if (Location == Type.LEFT.code) R.anim.activity_left
                     else R.anim.activity_right
                 )
             )
@@ -691,6 +683,17 @@ class StoryActivity : AppCompatActivity() {
 
     }
 
+    //광고
+    fun screenAdShow(){
+        // 광고가 있고 횟수가 5회 이상
+        if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
+            mInterstitialAd?.show(this@StoryActivity)
+            interstitialAd()
+            // 횟수 리셋
+            PrefKey(this).putInt("count", 0)
+        }
+    }
+
     //메뉴 보이게 함
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.story_menu, menu)
@@ -698,18 +701,8 @@ class StoryActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this, TitleActivity::class.java)
-        intent.putExtra("name", tag)
-        startActivity(intent)
-
-        finish()
-
-        if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
-            mInterstitialAd?.show(this@StoryActivity)
-            PrefKey(this).putInt("count", 0)
-        }
-
-        overridePendingTransition(R.anim.activity_down_sub, R.anim.activity_down)
+        ChangeIntent(this, TitleActivity::class.java, "story")
+        screenAdShow()
     }
 
     //전체화면
