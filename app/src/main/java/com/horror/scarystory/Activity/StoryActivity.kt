@@ -214,6 +214,7 @@ class StoryActivity : AppCompatActivity() {
         backBtn.setOnClickListener {
             ChangeIntent(this@StoryActivity, TitleActivity::class.java, "story")
             screenAdShow()
+            finish()
         }
 
         //북마크 표시
@@ -703,6 +704,7 @@ class StoryActivity : AppCompatActivity() {
     override fun onBackPressed() {
         ChangeIntent(this, TitleActivity::class.java, "story")
         screenAdShow()
+        finish()
     }
 
     //전체화면

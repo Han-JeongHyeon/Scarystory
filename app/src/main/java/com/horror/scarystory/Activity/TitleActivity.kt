@@ -3,7 +3,9 @@ package com.horror.scarystory.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
+import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -45,6 +47,7 @@ class TitleActivity : AppCompatActivity() {
     var titleTop: TextView? = null
 
     //뒤로가기 시간체크
+    var backTime = 0L
     var time = 0L
 
     //광고
@@ -57,6 +60,10 @@ class TitleActivity : AppCompatActivity() {
         shewAd()
         setOnClickListener()
         reviewDialog()
+
+//        val mediaPlayer = MediaPlayer.create(this, R.raw.fuscia)
+//        mediaPlayer.isLooping = true
+//        mediaPlayer.start()
 
         adapter = Adapter(this).apply {
             setOnItemClickListener(object : Adapter.OnItemClickListener { // 이벤트 리스너
@@ -348,9 +355,7 @@ class TitleActivity : AppCompatActivity() {
                 }
 
                 //리사이클뷰 포지션 변경
-                if (viewTag == Type.ALL.code) {
-                    binding.RecycleView.scrollToPosition(PrefKey(this@TitleActivity).getInt("number", 0))
-                }
+                binding.RecycleView.scrollToPosition(if (viewTag == Type.ALL.code) PrefKey(this@TitleActivity).getInt("number", 0) else 0)
             }
 
         }
@@ -447,11 +452,11 @@ class TitleActivity : AppCompatActivity() {
 
     //뒤로가기 버튼
     override fun onBackPressed() {
-        if(System.currentTimeMillis() - time <= 2500) {
+        if(System.currentTimeMillis() - backTime <= 2500) {
             finish()
         } else {
             Toast.makeText(this, "앱을 종료하기 위해 '뒤로' 버튼을 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show()
-            time = System.currentTimeMillis()
+            backTime = System.currentTimeMillis()
         }
     }
 

@@ -13,7 +13,6 @@ class ChangeIntent (
     init {
         val intent = Intent(thisActivity, intentActivity)
         thisActivity.startActivity(intent)
-        finish()
 
         if(animation == "main")
         //메인 애니메이션

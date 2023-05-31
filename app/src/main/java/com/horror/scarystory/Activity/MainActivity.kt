@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
                     object : MyApplication.OnShowAdCompleteListener {
                         override fun onShowAdComplete() {
                             ChangeIntent(this@MainActivity, TitleActivity::class.java, "main")
+                            finish()
                         }
                     })
             }, Time.TimerTime
