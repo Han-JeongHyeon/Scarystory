@@ -99,7 +99,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/Update"
+                android:id="@+id/update"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginLeft="14dp"
@@ -114,7 +114,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/Error"
+                android:id="@+id/error"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginLeft="14dp"

@@ -36,6 +36,7 @@ import com.horror.scarystory.*
 import com.horror.scarystory.Adapter.AdapterData
 import com.horror.scarystory.R
 import com.horror.scarystory.Story.*
+import com.horror.scarystory.databinding.ActivityMainBinding
 import com.horror.scarystory.databinding.ActivityStoryBinding
 import kotlinx.android.synthetic.main.activity_story.*
 import kotlinx.coroutines.CoroutineScope
@@ -45,9 +46,7 @@ import java.io.DataInputStream
 import java.lang.Exception
 import java.text.Bidi
 
-class StoryActivity : AppCompatActivity() {
-
-    private val binding by lazy { ActivityStoryBinding.inflate(layoutInflater) }
+class StoryActivity : BaseActivity<ActivityStoryBinding>({ ActivityStoryBinding.inflate(it) }) {
 
     var Tool_bar: Toolbar? = null
 
@@ -55,84 +54,12 @@ class StoryActivity : AppCompatActivity() {
     var font: SharedPreferences? = null
     var Bookmark: Button? = null
 
-    private var mInterstitialAd: InterstitialAd? = null
-
     var Title: Array<String> = listOf<String>().toTypedArray()
 
     companion object {
         var position = 0
         var tag = ""
         var title = ""
-    }
-
-    fun addAd() {
-        MobileAds.initialize(this) {}
-
-        val adRequest = AdRequest.Builder().build()
-        binding.adView.loadAd(adRequest)
-
-        //배너 광고 이벤트
-        binding.adView.adListener = object : AdListener() {
-            override fun onAdClicked() {}
-
-            override fun onAdClosed() {}
-
-            override fun onAdFailedToLoad(adError: LoadAdError) {}
-
-            override fun onAdImpression() {}
-
-            override fun onAdLoaded() {}
-        }
-
-    }
-
-    fun interstitialAd() {
-        val adRequest = AdRequest.Builder().build()
-
-        //광고 단가 높음
-        InterstitialAd.load(this@StoryActivity,
-            "ca-app-pub-8461307543970328/8595808456",
-            adRequest,
-            object : InterstitialAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d("광고", "중간 시작")
-                    //광고 단가 높음 끝
-                    //광고 단가 중간
-                    InterstitialAd.load(this@StoryActivity,
-                        "ca-app-pub-8461307543970328/2685006225",
-                        adRequest, object : InterstitialAdLoadCallback() {
-                            override fun onAdFailedToLoad(adError: LoadAdError) {
-                                Log.d("광고", "낮음 단가")
-                                //광고 단가 중간 끝
-                                InterstitialAd.load(this@StoryActivity,
-                                    "ca-app-pub-8461307543970328/9771239466",
-                                    adRequest, object : InterstitialAdLoadCallback() {
-                                        override fun onAdFailedToLoad(adError: LoadAdError) {
-                                            Log.d("광고", "낮음 못받음")
-                                            mInterstitialAd = null
-                                        }
-
-                                        override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                                            Log.d("광고", "낮은 단가")
-                                            mInterstitialAd = interstitialAd
-                                        }
-                                    })
-                            }
-
-                            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                                Log.d("광고", "중간 단가")
-                                mInterstitialAd = interstitialAd
-                            }
-                        })
-                }
-
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Log.d("광고", "높은 단가")
-                    mInterstitialAd = interstitialAd
-
-                }
-            })
-
     }
 
     fun setStory() {
@@ -153,6 +80,7 @@ class StoryActivity : AppCompatActivity() {
         } else {
             value.substring(value.indexOf("@") + 1)
         }
+
         binding.interText.text = text
         title = Title[position]
 
@@ -188,7 +116,6 @@ class StoryActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
 
         Bookmark = findViewById(R.id.bookmark)
         Title = resources.getStringArray(R.array.name)
@@ -201,9 +128,6 @@ class StoryActivity : AppCompatActivity() {
         position = intent.getIntExtra("position", -1)
         title = Title[position]
 
-        setupInterstitialAd()
-        addAd()
-        interstitialAd()
         setStory()
 
         //툴바
@@ -212,9 +136,8 @@ class StoryActivity : AppCompatActivity() {
 
         //백 버튼
         backBtn.setOnClickListener {
-            ChangeIntent(this@StoryActivity, TitleActivity::class.java, "story")
-            screenAdShow()
-            finish()
+            fromToIntent(this@StoryActivity, TitleActivity())
+            showFullScreenAd()
         }
 
         //북마크 표시
@@ -306,9 +229,9 @@ class StoryActivity : AppCompatActivity() {
                 }
 
                 if (binding.interLayout.visibility == View.VISIBLE) {
-                    binding.interLayout.visibility = View.INVISIBLE
+                    binding.interLayout.invisible()
                     Handler().postDelayed(Runnable {
-                        binding.InterBtn.visibility = View.VISIBLE
+                        binding.InterBtn.show()
                     }, 700)
                     binding.interLayout.startAnimation(
                         AnimationUtils.loadAnimation(
@@ -317,8 +240,8 @@ class StoryActivity : AppCompatActivity() {
                         )
                     )
                 } else {
-                    binding.interLayout.visibility = View.VISIBLE
-                    binding.InterBtn.visibility = View.INVISIBLE
+                    binding.interLayout.show()
+                    binding.InterBtn.invisible()
                     binding.interLayout.startAnimation(
                         AnimationUtils.loadAnimation(
                             applicationContext,
@@ -334,9 +257,9 @@ class StoryActivity : AppCompatActivity() {
         //해석 버튼
         binding.interBtn.setOnClickListener {
             if (binding.interLayout.visibility == View.VISIBLE) {
-                binding.interLayout.visibility = View.INVISIBLE
+                binding.interLayout.invisible()
                 Handler().postDelayed(Runnable {
-                    binding.InterBtn.visibility = View.VISIBLE
+                    binding.InterBtn.show()
                 }, 700)
                 binding.interLayout.startAnimation(
                     AnimationUtils.loadAnimation(
@@ -345,8 +268,8 @@ class StoryActivity : AppCompatActivity() {
                     )
                 )
             } else {
-                binding.interLayout.visibility = View.VISIBLE
-                binding.InterBtn.visibility = View.INVISIBLE
+                binding.interLayout.show()
+                binding.InterBtn.invisible()
                 binding.interLayout.startAnimation(
                     AnimationUtils.loadAnimation(
                         applicationContext,
@@ -405,9 +328,10 @@ class StoryActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.font -> {
-                binding.textOption.visibility = View.VISIBLE
-                binding.InterBtn.visibility = View.INVISIBLE
-                binding.interLayout.visibility = View.INVISIBLE
+                binding.textOption.show()
+                binding.InterBtn.invisible()
+                binding.InterBtn.invisible()
+                binding.interLayout.invisible()
             }
             R.id.Sharing -> {
                 val Sharing_intent = Intent().apply {
@@ -488,14 +412,14 @@ class StoryActivity : AppCompatActivity() {
         when (tag) {
             Type.ALL.code -> {
                 if (position != 0) {
-                    binding.leftBtn.visibility = View.VISIBLE
+                    binding.leftBtn.show()
                 } else {
-                    binding.leftBtn.visibility = View.INVISIBLE
+                    binding.leftBtn.invisible()
                 }
                 if (position != (numvalue - 1)) {
-                    binding.rightBtn.visibility = View.VISIBLE
+                    binding.rightBtn.show()
                 } else {
-                    binding.rightBtn.visibility = View.INVISIBLE
+                    binding.rightBtn.invisible()
                 }
                 if (Location == "Left") {
                     position -= 1
@@ -515,10 +439,10 @@ class StoryActivity : AppCompatActivity() {
                     }
                     //버튼이 필요한지 체크
                     if (!liboolean.getBoolean("li_boolean_${i}", false)) {
-                        binding.leftBtn.visibility = View.VISIBLE; break
+                        binding.leftBtn.show(); break
                     }
                     if (i == 0) {
-                        binding.leftBtn.visibility = View.INVISIBLE
+                        binding.leftBtn.invisible()
                     }
                 }
                 for (i in posi until numvalue) {
@@ -531,10 +455,10 @@ class StoryActivity : AppCompatActivity() {
                     }
                     //버튼이 필요한지 체크
                     if (!liboolean.getBoolean("li_boolean_${i}", false)) {
-                        binding.rightBtn.visibility = View.VISIBLE; break
+                        binding.rightBtn.show(); break
                     }
                     if (i == (numvalue - 1)) {
-                        binding.rightBtn.visibility = View.INVISIBLE
+                        binding.rightBtn.invisible()
                     }
                 }
             }
@@ -550,10 +474,10 @@ class StoryActivity : AppCompatActivity() {
                     }
                     //버튼이 필요한지 체크
                     if (i == -1) {
-                        binding.leftBtn.visibility = View.INVISIBLE
+                        binding.leftBtn.invisible()
                     }
                     if (favorboolean.getBoolean("favor_boolean_${i}", false)) {
-                        binding.leftBtn.visibility = View.VISIBLE; break
+                        binding.leftBtn.show(); break
                     }
                 }
                 for (i in (posi + 1)..numvalue) {
@@ -567,18 +491,18 @@ class StoryActivity : AppCompatActivity() {
                     }
                     //버튼이 필요한지 체크
                     if (i == numvalue) {
-                        binding.rightBtn.visibility = View.INVISIBLE
+                        binding.rightBtn.invisible()
                     }
                     if (favorboolean.getBoolean("favor_boolean_${i}", false)) {
-                        binding.rightBtn.visibility = View.VISIBLE; break
+                        binding.rightBtn.show(); break
                     }
                 }
             }
             Type.SEARCH.code -> {
                 val Search_Word = getSharedPreferences("Search_Word", 0)
                 Search_Word.getString("Search_Word", "")
-                binding.leftBtn.visibility = View.INVISIBLE
-                binding.rightBtn.visibility = View.INVISIBLE
+                binding.leftBtn.invisible()
+                binding.rightBtn.invisible()
                 for (i in (posi - 1) downTo 0) {
                     //Left 다음 이야기 체크
                     if (Location == "Left") {
@@ -588,10 +512,10 @@ class StoryActivity : AppCompatActivity() {
                     }
                     //버튼이 필요한지 체크
 //                    if (i == -1) {
-//                        binding.leftBtn.visibility = View.INVISIBLE
+//                        binding.leftBtn.invisible()
 //                    }
                     if (title[i].contains("${Search_Word.getString("Search_Word", "")}")) {
-                        binding.leftBtn.visibility = View.VISIBLE; break
+                        binding.leftBtn.show(); break
                     }
                 }
                 for (i in (posi + 1) until numvalue) {
@@ -602,7 +526,7 @@ class StoryActivity : AppCompatActivity() {
                         }
                     }
                     if (title[i].contains("${Search_Word.getString("Search_Word", "")}")) {
-                        binding.rightBtn.visibility = View.VISIBLE; break
+                        binding.rightBtn.show(); break
                     }
                 }
             }
@@ -611,23 +535,23 @@ class StoryActivity : AppCompatActivity() {
         //버튼을 화면에 표시/표시 안함
         if (Location == Type.OPTION.code) {
             if (Tool_bar?.visibility == View.VISIBLE) {
-                binding.leftBtn.visibility = View.INVISIBLE
-                binding.rightBtn.visibility = View.INVISIBLE
-                binding.textOption.visibility = View.INVISIBLE
-                binding.InterBtn.visibility = View.VISIBLE
-                Tool_bar?.visibility = View.INVISIBLE
+                binding.leftBtn.invisible()
+                binding.rightBtn.invisible()
+                binding.textOption.invisible()
+                binding.InterBtn.show()
+                Tool_bar?.invisible()
 
                 Tool_bar?.startAnimation(up)
             } else {
-                Tool_bar?.visibility = View.VISIBLE
+                Tool_bar?.show()
 
                 Tool_bar?.startAnimation(down)
             }
 
             if (binding.interLayout.visibility == View.VISIBLE) {
-                binding.interLayout.visibility = View.INVISIBLE
+                binding.interLayout.invisible()
                 Handler().postDelayed(Runnable {
-                    binding.InterBtn.visibility = View.VISIBLE
+                    binding.InterBtn.show()
                 }, 700)
                 binding.interLayout.startAnimation(
                     AnimationUtils.loadAnimation(
@@ -643,9 +567,9 @@ class StoryActivity : AppCompatActivity() {
             setStory()
 
             if(binding.interLayout.visibility == View.VISIBLE) {
-                binding.interLayout.visibility = View.INVISIBLE
+                binding.interLayout.invisible()
                 Handler().postDelayed(Runnable {
-                    binding.InterBtn.visibility = View.VISIBLE
+                    binding.InterBtn.show()
                 }, 700)
                 binding.interLayout.startAnimation(
                     AnimationUtils.loadAnimation(
@@ -655,17 +579,9 @@ class StoryActivity : AppCompatActivity() {
                 )
             }
 
-//            val advertising = PrefKey(this).getInt("count", 0)
-
             PrefKey(this).putInt("count", PrefKey(this).getInt("count", 0) + 1)
 
-            screenAdShow()
-
-//            if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
-//                mInterstitialAd?.show(this@StoryActivity)
-//                interstitialAd()
-//                PrefKey(this).putInt("count", 0)
-//            }
+            showFullScreenAd()
 
             binding.llAnime.startAnimation(
                 AnimationUtils.loadAnimation(
@@ -679,20 +595,9 @@ class StoryActivity : AppCompatActivity() {
 
     }
 
-    //전면 광고
-    private fun setupInterstitialAd() {
-
-    }
-
     //광고
-    fun screenAdShow(){
-        // 광고가 있고 횟수가 5회 이상
-        if (mInterstitialAd != null && PrefKey(this).getInt("count", 0) >= 5) {
-            mInterstitialAd?.show(this@StoryActivity)
-            interstitialAd()
-            // 횟수 리셋
-            PrefKey(this).putInt("count", 0)
-        }
+    private fun showFullScreenAd(){
+        AdRequestService(this@StoryActivity).showInterstitialAd()
     }
 
     //메뉴 보이게 함
@@ -702,9 +607,8 @@ class StoryActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        ChangeIntent(this, TitleActivity::class.java, "story")
-        screenAdShow()
-        finish()
+        fromToIntent(this@StoryActivity, TitleActivity())
+        showFullScreenAd()
     }
 
     //전체화면
@@ -721,17 +625,17 @@ class StoryActivity : AppCompatActivity() {
         window.decorView.setSystemUiVisibility(uiOption)
     }
 
-    override fun onRestart() {
-        super.onRestart()
-
-        Log.d("TAG", "onRestart")
-        val application = application as? MyApplication
-
-        application?.showAdIfAvailable(
-            this@StoryActivity,
-            object : MyApplication.OnShowAdCompleteListener {
-                override fun onShowAdComplete() {
-                }
-            })
-    }
+//    override fun onRestart() {
+//        super.onRestart()
+//
+//        Log.d("TAG", "onRestart")
+//        val application = application as? MyApplication
+//
+//        application?.showAdIfAvailable(
+//            this@StoryActivity,
+//            object : MyApplication.OnShowAdCompleteListener {
+//                override fun onShowAdComplete() {
+//                }
+//            })
+//    }
 }

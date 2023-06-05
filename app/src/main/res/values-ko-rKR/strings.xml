@@ -17,4 +17,7 @@
     <string name="광고보기">광고 보기</string>
     <string name="광고_해석권">광고보고 해석권 10개 획득하기</string>
     <string name="해석권_설명">해석권은 해석을 보여주는 쿠폰입니다\n\t\t처음 10개가 주어지고 그 후 광고를 \t\t\t통해서 얻을 수 있습니다.</string>
+    <string name="리뷰_타이틀">이야기가 재밌었다면\n리뷰를 달아주세요!!</string>
+    <string name="리뷰">리뷰 달기</string>
+    <string name="리뷰_하단">옆에서 몰래 보고있는 당신도...</string>
 </resources>

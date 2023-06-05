@@ -1,79 +1,148 @@
 package com.horror.scarystory
 
+import android.app.Application
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AdRequestService(
-    private var thisActivity: AppCompatActivity
-) {
-    var mRewardedAd: RewardedAd? = null
+    private var fromActivity: AppCompatActivity
+): Application() {
 
-    fun loadRewardedAd(){
+    companion object {
+        var mRewardedAd: RewardedAd? = null
+        var mInterstitialAd: InterstitialAd? = null
+    }
+
+    fun getRewardAd() {
+        CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+                mInterstitialAd ?: interstitialAd()
+                delay(1000 * 90)
+                mRewardedAd ?: loadRewardedAd()
+                delay(1000 * 90)
+            }
+        }
+    }
+
+    private fun loadRewardedAd(){
         val adRequest = AdRequest.Builder().build()
         RewardedAd.load(
-            thisActivity, "ca-app-pub-8461307543970328/9609175369", adRequest, object : RewardedAdLoadCallback(){
+            fromActivity, "ca-app-pub-8461307543970328/9609175369", adRequest, object : RewardedAdLoadCallback(){
                 override fun onAdFailedToLoad(p0: LoadAdError) {
                     mRewardedAd = null
-                    Log.d("LOG_D", "$p0")
+                    Logger.warring("FAILED", "$p0")
                 }
                 override fun onAdLoaded(p0: RewardedAd) {
                     mRewardedAd = p0
+                    Logger.debug("SUCCESS", "$p0")
                 }
             }
         )
-
-        Log.d("LOG_D", "$mRewardedAd")
     }
 
-    fun showRewardedAd(): String{
-        var rewardAmount = 0
-
+    fun showRewardedAd(){
         if (mRewardedAd != null){
             try {
                 mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback(){
                     override fun onAdDismissedFullScreenContent() {
-                        Log.d("TAG", "Ad was dismissed")
+                        Logger.debug("Dismissed", "Ad was dismissed")
                         mRewardedAd = null
-                        loadRewardedAd()
                     }
 
                     override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                        Log.d("TAG", "Ad failed to show.")
+                        Logger.debug("Failed", "Ad failed to show.")
                     }
 
                     override fun onAdShowedFullScreenContent() {
-                        Log.d("TAG", "Ad showed fullscreen content.")
+                        Logger.debug("Showed", "Ad showed fullscreen content.")
                         mRewardedAd = null
                     }
                 }
 
-                mRewardedAd?.show(thisActivity, OnUserEarnedRewardListener() { rewardItem ->
-                    rewardAmount = rewardItem.amount + PrefKey(thisActivity).getInt("inter", 10)
-
-                    PrefKey(thisActivity).putInt("inter", rewardAmount)
-
-//                  amount.text = PrefKey(thisActivity).getInt("inter", 10).toString()
-
+                mRewardedAd?.show(fromActivity, OnUserEarnedRewardListener() { rewardItem ->
+                    PrefKey(fromActivity).putInt("inter", rewardItem.amount + PrefKey(fromActivity).getInt("inter", 10))
                 })
+
             } catch (e: Exception) {
-                Toast.makeText(thisActivity, "광고를 불러오는 중에 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                Logger.debug("LOG", "The rewarded ad was not loaded yet")
+                Toast.makeText(fromActivity, "광고를 불러오는 중에 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Log.d("TAG", "The rewarded ad was not loaded yet")
-            Toast.makeText(thisActivity, "현재 광고가 준비되지 않았습니다.\n나중에 다시 해주세요.", Toast.LENGTH_SHORT).show()
-            loadRewardedAd()
+            Toast.makeText(fromActivity, "광고가 준비되지 않았습니다.\n나중에 다시 시도 해주세요.", Toast.LENGTH_SHORT).show()
         }
-
-        return "$rewardAmount"
     }
 
-    fun getReward(): RewardedAd? {
-        return mRewardedAd
+    private fun interstitialAd() {
+        val adRequest = AdRequest.Builder().build()
+
+        //광고 단가 높음
+        InterstitialAd.load(fromActivity,
+            "ca-app-pub-8461307543970328/8595808456",
+            adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Logger.debug("광고", "광고 준비 X")
+                    mInterstitialAd = null
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Logger.debug("광고", "광고 준비 O")
+                    mInterstitialAd = interstitialAd
+
+                }
+            })
+
+//        //광고 단가 중간
+//        InterstitialAd.load(fromActivity,
+//            "ca-app-pub-8461307543970328/2685006225",
+//            adRequest, object : InterstitialAdLoadCallback() {
+//                override fun onAdFailedToLoad(adError: LoadAdError) {
+//                    Log.d("광고", "낮음 단가")
+//                    mInterstitialAd = null
+//                }
+//
+//                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+//                    Log.d("광고", "중간 단가")
+//                    mInterstitialAd = interstitialAd
+//                }
+//            })
+
+//        //광고 단가 중간 끝
+//        InterstitialAd.load(fromActivity,
+//            "ca-app-pub-8461307543970328/9771239466",
+//            adRequest, object : InterstitialAdLoadCallback() {
+//                override fun onAdFailedToLoad(adError: LoadAdError) {
+//                    Log.d("광고", "낮음 못받음")
+//                    mInterstitialAd = null
+//                }
+//
+//                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+//                    Log.d("광고", "낮은 단가")
+//                    mInterstitialAd = interstitialAd
+//                }
+//            })
+
     }
 
+    fun showInterstitialAd() {
+        mInterstitialAd ?: return
+
+        if (PrefKey(fromActivity).getInt("count", 0) >= 5) {
+            mInterstitialAd!!.show(fromActivity)
+            mInterstitialAd = null
+            PrefKey(fromActivity).putInt("count", 0)
+        }
+    }
+    
 }

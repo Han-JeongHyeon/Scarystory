@@ -12,22 +12,17 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.horror.scarystory.*
 import com.horror.scarystory.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>({ ActivityMainBinding.inflate(it) }) {
 
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    val timerTime = 3600L
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+
+        AdRequestService(this).getRewardAd()
 
         val application = application as? MyApplication
-
-//        Handler().postDelayed(
-//            Runnable {
-//                ChangeIntent(this@MainActivity, TitleActivity::class.java, "main")
-//            }, 3600L
-//        )
 
         Handler().postDelayed(
             Runnable {
@@ -35,11 +30,10 @@ class MainActivity : AppCompatActivity() {
                     this@MainActivity,
                     object : MyApplication.OnShowAdCompleteListener {
                         override fun onShowAdComplete() {
-                            ChangeIntent(this@MainActivity, TitleActivity::class.java, "main")
-                            finish()
+                            fromToIntent(this@MainActivity, TitleActivity())
                         }
                     })
-            }, Time.TimerTime
+            }, timerTime
         )
 
         getFCMToken()

@@ -27,6 +27,7 @@ import com.horror.scarystory.*
 import com.horror.scarystory.Adapter.Adapter
 import com.horror.scarystory.Adapter.AdapterData
 import com.horror.scarystory.R
+import com.horror.scarystory.databinding.ActivityMainBinding
 import com.horror.scarystory.databinding.ActivityTitleBinding
 import kotlinx.android.synthetic.main.activity_title.*
 import kotlinx.android.synthetic.main.tiele_bar.*
@@ -36,34 +37,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class TitleActivity : AppCompatActivity() {
-
-    //xml 연결
-    private val binding by lazy { ActivityTitleBinding.inflate(layoutInflater) }
+class TitleActivity : BaseActivity<ActivityTitleBinding>({ ActivityTitleBinding.inflate(it) }) {
 
     lateinit var adapter: Adapter
     val datas = mutableListOf<AdapterData>()
 
-    var titleTop: TextView? = null
-
-    //뒤로가기 시간체크
-    var backTime = 0L
     var time = 0L
-
-    //광고
-    private var mRewardedAd: RewardedAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
 
-        shewAd()
         setOnClickListener()
         reviewDialog()
-
-//        val mediaPlayer = MediaPlayer.create(this, R.raw.fuscia)
-//        mediaPlayer.isLooping = true
-//        mediaPlayer.start()
+//        adapter()
 
         adapter = Adapter(this).apply {
             setOnItemClickListener(object : Adapter.OnItemClickListener { // 이벤트 리스너
@@ -75,19 +61,12 @@ class TitleActivity : AppCompatActivity() {
 
         binding.RecycleView.adapter = adapter
 
-        btnAll.setTextColor(ContextCompat.getColor(this, R.color.textColor))
-
-        //툴바
-        val toolbar = findViewById<Toolbar>(R.id.Title_bar)
-        toolbar.title = ""
-        setSupportActionBar(toolbar)
-
-        titleTop = findViewById(R.id.title)
-
-        amount.text = PrefKey(this).getInt("inter",10).toString()
+        //Title 상단 바 표시
+        setSupportActionBar(findViewById(R.id.title_bar))
 
         ViewUpdate(Type.ALL.code)
 
+        //전체 화면 작업
         binding.fullScreen.isChecked = PrefKey(this).getBoolean("fullScreen", false)
         fullScreenMode(binding.fullScreen.isChecked)
 
@@ -138,41 +117,12 @@ class TitleActivity : AppCompatActivity() {
         }
     }
 
-    fun sendMail(title: String, content: String) {
-        try {
-            val email = Intent(Intent.ACTION_SEND)
-            email.type = "plain/text"
-            email.setPackage("com.google.android.gm")
-            val address = arrayOf("jhsoft04@gmail.com")
-            email.putExtra(Intent.EXTRA_EMAIL, address)
-            email.putExtra(Intent.EXTRA_SUBJECT, title)
-            email.putExtra(
-                Intent.EXTRA_TEXT,
-                "앱 버전 (AppVersion): ${
-                    applicationContext.packageManager.getPackageInfo(
-                        applicationContext.packageName,
-                        0
-                    ).versionName
-                }\n" +
-                        "기기명 (Device): ${Build.MODEL}\n" +
-                        "안드로이드 OS버전 (Android OS Ver): ${Build.VERSION.RELEASE}\n\n" +
-                        "$content : \n\n\n"
-            )
-            startActivity(email)
-        } catch (e: Exception) {
-            Toast.makeText(
-                applicationContext,
-                "Gmail앱이 활성화 되어 있지 않아 실행할 수 없습니다.",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
     fun setOnClickListener() {
         binding.apply {
             btnAll.setOnClickListener {
                 ViewUpdate(Type.ALL.code)
             }
+
             btnUnread.setOnClickListener {
                 ViewUpdate(Type.UNREAD.code)
             }
@@ -183,14 +133,6 @@ class TitleActivity : AppCompatActivity() {
 
             btnSetting.setOnClickListener {
                 ViewUpdate(Type.SETTING.code)
-            }
-            //문의하기 기능
-            Update.setOnClickListener {
-                sendMail("[이해하면 무서운 이야기 업데이트 문의]", "원하는 업데이트")
-            }
-
-            Error.setOnClickListener {
-                sendMail("[이해하면 무서운 이야기 오류 문의]", "오류 설명")
             }
 
             fullScreen.setOnCheckedChangeListener { compoundButton, isChecked ->
@@ -212,7 +154,7 @@ class TitleActivity : AppCompatActivity() {
                     PrefKey(this@TitleActivity).putBoolean("popupShow", false)
                     title.text = resources.getText(R.string.해석권_설명)
                     btnNo.text = resources.getText(R.string.확인)
-                    btnYes.visibility = View.GONE
+                    btnYes.hide()
                 }
 
                 btnNo.setOnClickListener {
@@ -220,7 +162,7 @@ class TitleActivity : AppCompatActivity() {
                 }
 
                 btnYes.setOnClickListener {
-                    showRewardedAd()
+                    AdRequestService(this@TitleActivity).showRewardedAd()
                     dialog.dismiss()
                 }
 
@@ -255,11 +197,11 @@ class TitleActivity : AppCompatActivity() {
 
         if (viewTag ==  Type.SETTING.code) {
             binding.btnSetting.setTextColor(ContextCompat.getColor(this, R.color.textColor))
-            binding.RecycleView.visibility = View.GONE
-            binding.llSetting.visibility = View.VISIBLE
+            binding.RecycleView.hide()
+            binding.llSetting.show()
         } else {
-            binding.RecycleView.visibility = View.VISIBLE
-            binding.llSetting.visibility = View.GONE
+            binding.RecycleView.show()
+            binding.llSetting.hide()
         }
 
         setViewSetting()
@@ -334,7 +276,7 @@ class TitleActivity : AppCompatActivity() {
                     }
                     Type.SEARCH.code -> {
                         binding.btnAll.setTextColor(ContextCompat.getColor(this@TitleActivity, R.color.textColor))
-                        titleTop?.text = PrefKey(this@TitleActivity).getString("Search_Word", "")
+//                        tv_top_title.text = PrefKey(this@TitleActivity).getString("Search_Word", "")
                     }
                 }
 
@@ -349,7 +291,7 @@ class TitleActivity : AppCompatActivity() {
 
                     Handler().postDelayed(Runnable {
                         binding.RecycleView.startAnimation(recycleAnim)
-                        binding.RecycleView.visibility = View.VISIBLE
+                        binding.RecycleView.show()
                     }, 200)
 
                 }
@@ -375,104 +317,23 @@ class TitleActivity : AppCompatActivity() {
         window.decorView.setSystemUiVisibility(uiOption)
     }
 
-    fun shewAd() {
-        loadAd()
-        loadRewardedAd()
+    override fun onResume() {
+        super.onResume()
+        amount.text = PrefKey(this).getInt("inter",10).toString()
     }
 
-    //전체화면 광고
-    fun loadRewardedAd(){
-        val adRequest = AdRequest.Builder().build()
-        RewardedAd.load(
-            this, "ca-app-pub-8461307543970328/9609175369", adRequest, object : RewardedAdLoadCallback(){
-                override fun onAdFailedToLoad(p0: LoadAdError) {
-                    mRewardedAd = null
-                }
-                override fun onAdLoaded(p0: RewardedAd) {
-                    mRewardedAd = p0
-                }
-            }
-        )
-    }
-
-    fun showRewardedAd(){
-        if (mRewardedAd != null){
-            try {
-                mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback(){
-                    override fun onAdDismissedFullScreenContent() {
-                        Log.d("TAG", "Ad was dismissed")
-                        mRewardedAd = null
-                        loadRewardedAd()
-                    }
-
-                    override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                        Log.d("TAG", "Ad failed to show.")
-                    }
-
-                    override fun onAdShowedFullScreenContent() {
-                        Log.d("TAG", "Ad showed fullscreen content.")
-                        mRewardedAd = null
-                    }
-                }
-
-                mRewardedAd?.show(this, OnUserEarnedRewardListener() { rewardItem ->
-                    val rewardAmount = rewardItem.amount + PrefKey(this).getInt("inter", 10)
-
-                    PrefKey(this).putInt("inter", rewardAmount)
-
-                    amount.text = PrefKey(this).getInt("inter", 10).toString()
-
-                })
-            } catch (e: Exception) {
-                Toast.makeText(this, "광고를 불러오는 중에 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Log.d("TAG", "The rewarded ad was not loaded yet")
-            Toast.makeText(this, "현재 광고가 준비되지 않았습니다.\n나중에 다시 해주세요.", Toast.LENGTH_SHORT).show()
-            loadRewardedAd()
-        }
-    }
-
-    //배너 광고
-    fun loadAd() {
-        MobileAds.initialize(this) {}
-
-        val adRequest = AdRequest.Builder().build()
-        binding.adView.loadAd(adRequest)
-
-        //배너 광고 이벤트
-        binding.adView.adListener = object : AdListener() {
-            override fun onAdClicked() {}
-            override fun onAdClosed() {}
-            override fun onAdFailedToLoad(adError: LoadAdError) {}
-            override fun onAdImpression() {}
-            override fun onAdLoaded() {}
-        }
-    }
-
-    //뒤로가기 버튼
-    override fun onBackPressed() {
-        if(System.currentTimeMillis() - backTime <= 2500) {
-            finish()
-        } else {
-            Toast.makeText(this, "앱을 종료하기 위해 '뒤로' 버튼을 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show()
-            backTime = System.currentTimeMillis()
-        }
-    }
-
-
-    override fun onRestart() {
-        super.onRestart()
-
-        val application = application as? MyApplication
-
-        application?.showAdIfAvailable(
-            this@TitleActivity,
-            object : MyApplication.OnShowAdCompleteListener {
-                override fun onShowAdComplete() {
-
-                }
-            })
-    }
+//    override fun onRestart() {
+//        super.onRestart()
+//
+//        val application = application as? MyApplication
+//
+//        application?.showAdIfAvailable(
+//            this@TitleActivity,
+//            object : MyApplication.OnShowAdCompleteListener {
+//                override fun onShowAdComplete() {
+//
+//                }
+//            })
+//    }
 
 }
