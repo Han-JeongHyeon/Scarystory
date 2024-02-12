@@ -47,7 +47,6 @@ abstract class BaseActivity<T: ViewBinding>(
 
     override fun onStart() {
         super.onStart()
-
     }
 
     override fun onResume() {
@@ -85,6 +84,7 @@ abstract class BaseActivity<T: ViewBinding>(
 
     override fun onBackPressed() {
         if(System.currentTimeMillis() - backTime <= 2500) {
+            MyApplication().release()
             finish()
         } else {
             Toast.makeText(this, "앱을 종료하기 위해 '뒤로' 버튼을 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show()

@@ -24,6 +24,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>({ ActivityMainBinding.inf
 
         val application = application as? MyApplication
 
+        val musicFg = PrefKey(this).getBoolean("music", false)
+
+        if (musicFg){
+            MyApplication().start()
+        }
+
         Handler().postDelayed(
             Runnable {
                 application?.showAdIfAvailable(

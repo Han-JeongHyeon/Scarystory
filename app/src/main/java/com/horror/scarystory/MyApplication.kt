@@ -3,6 +3,7 @@ package com.horror.scarystory
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -24,6 +25,10 @@ class MyApplication :
     private lateinit var appOpenAdManager: AppOpenAdManager
     private var currentActivity: Activity? = null
 
+    companion object {
+        var mediaPlayer: MediaPlayer? = null
+    }
+
     override fun onCreate() {
         super.onCreate()
         registerActivityLifecycleCallbacks(this)
@@ -31,6 +36,9 @@ class MyApplication :
         MobileAds.initialize(this) {}
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         appOpenAdManager = AppOpenAdManager()
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.fuscia)
+        mediaPlayer?.isLooping = true
     }
 
     /** LifecycleObserver method that shows the app open ad when the app moves to foreground. */
@@ -224,4 +232,18 @@ class MyApplication :
             appOpenAd!!.show(activity)
         }
     }
+
+    // 음악 관련 로직
+    fun start() {
+        mediaPlayer?.start()
+    }
+
+    fun pause() {
+        mediaPlayer?.pause()
+    }
+
+    fun release() {
+        mediaPlayer?.release()
+    }
+
 }

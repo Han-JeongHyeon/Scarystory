@@ -16,14 +16,14 @@ android {
         viewBinding true
     }
 
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.horror.scarystory"
         minSdk 23
-        targetSdk 32
-        versionCode 8
-        versionName "4.4"
+        targetSdk 33
+        versionCode 9
+        versionName "4.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -68,4 +68,18 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+
+
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0' // DrawerLayout
+    implementation 'com.google.android.material:material:1.0.0' // NavigationView
+
+    //파이어 베이스
+    implementation 'com.google.firebase:firebase-config:19.1.1'
+    implementation 'org.jsoup:jsoup:1.14.3'
+
+    implementation "com.airbnb.android:lottie:5.2.0"
+
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
 }

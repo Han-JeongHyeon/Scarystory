@@ -70,6 +70,8 @@ class TitleActivity : BaseActivity<ActivityTitleBinding>({ ActivityTitleBinding.
         binding.fullScreen.isChecked = PrefKey(this).getBoolean("fullScreen", false)
         fullScreenMode(binding.fullScreen.isChecked)
 
+        binding.musicOn.isChecked = PrefKey(this).getBoolean("music", false)
+
         //검색
         binding.editTitle.setOnEditorActionListener { textView, i, keyEvent ->
             if (i == EditorInfo.IME_ACTION_DONE) {
@@ -140,6 +142,11 @@ class TitleActivity : BaseActivity<ActivityTitleBinding>({ ActivityTitleBinding.
                 fullScreenMode(isChecked)
             }
 
+            musicOn.setOnCheckedChangeListener { compoundButton, isChecked ->
+                PrefKey(this@TitleActivity).putBoolean("music", isChecked)
+                musicOn(isChecked)
+            }
+
             ll_cpn.setOnClickListener {
                 val dialog = Dialog(this@TitleActivity)
 
@@ -169,6 +176,14 @@ class TitleActivity : BaseActivity<ActivityTitleBinding>({ ActivityTitleBinding.
                 dialog.show()
 
             }
+        }
+    }
+
+    fun musicOn(musicFg: Boolean){
+        if (musicFg){
+            MyApplication().start()
+        } else {
+            MyApplication().pause()
         }
     }
 
