@@ -29,8 +29,8 @@ class AdRequestService(
             while (true) {
                 mInterstitialAd ?: interstitialAd()
                 delay(1000 * 90)
-                mRewardedAd ?: loadRewardedAd()
-                delay(1000 * 90)
+//                mRewardedAd ?: loadRewardedAd()
+//                delay(1000 * 90)
             }
         }
     }

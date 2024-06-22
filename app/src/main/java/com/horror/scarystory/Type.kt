@@ -11,4 +11,6 @@ enum class Type(val code: String) {
     LEFT("Left"),
     RIGHT("Right"),
     OPTION("Option"),
+
+    STORE_ID("StoreId"),
 }

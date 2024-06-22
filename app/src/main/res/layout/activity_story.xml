@@ -6,16 +6,12 @@
     android:layout_height="match_parent"
     android:background="@drawable/story_background"
     android:orientation="vertical"
-    tools:context=".Activity.StoryActivity">
+    tools:context=".activity.StoryActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
-
-        <include
-            layout="@layout/story_bar"
-            android:id="@+id/Story_bar"/>
 
         <LinearLayout
             android:id="@+id/ll_anime"
@@ -70,20 +66,6 @@
             </ScrollView>
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/right_btn"
-            android:layout_width="45dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center|right"
-            android:background="@drawable/right_btn" />
-
-        <Button
-            android:id="@+id/left_btn"
-            android:layout_width="45dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center|left"
-            android:background="@drawable/left_btn" />
 
         <LinearLayout
             android:id="@+id/text_Option"
@@ -244,25 +226,5 @@
             android:background="@drawable/menu_backround"/>
 
     </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/black">
-
-        //배너 광고
-        //ca-app-pub-8461307543970328/1041975543
-
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-8461307543970328/6023566142"></com.google.android.gms.ads.AdView>
-
-    </LinearLayout>
 
 </LinearLayout>

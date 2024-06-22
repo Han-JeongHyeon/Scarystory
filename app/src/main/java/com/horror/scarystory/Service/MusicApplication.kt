@@ -1,12 +1,8 @@
-package com.horror.scarystory.Service
+package com.horror.scarystory.service
 
-import android.app.Activity
 import android.app.Application
-import android.app.Service
 import android.media.MediaPlayer
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import com.horror.scarystory.Activity.MainActivity
 import com.horror.scarystory.R
 
 class MusicApplication: Application() {

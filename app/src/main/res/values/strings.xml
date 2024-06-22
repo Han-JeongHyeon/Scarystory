@@ -20,4 +20,5 @@
     <string name="리뷰">리뷰 달기</string>
     <string name="리뷰_타이틀">이야기가 재밌었다면\\n리뷰를 달아주세요!!</string>
     <string name="리뷰_하단">옆에서 몰래 보고있는 당신도...</string>
+    <string name="title_activity_story_list">StoryListActivity</string>
 </resources>
