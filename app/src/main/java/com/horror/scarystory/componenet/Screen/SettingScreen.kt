@@ -1,4 +1,4 @@
-package com.horror.scarystory.componenet
+package com.horror.scarystory.componenet.Screen
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,13 +15,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.Switch
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.ads.AdSize
@@ -30,6 +27,7 @@ import com.horror.scarystory.Store.LocalSettingStore
 import com.horror.scarystory.Util.colorWhite
 import com.horror.scarystory.Util.settingColor
 import com.horror.scarystory.Util.topBarHeight
+import com.horror.scarystory.componenet.SettingText
 
 @Composable
 fun SettingScreen() {

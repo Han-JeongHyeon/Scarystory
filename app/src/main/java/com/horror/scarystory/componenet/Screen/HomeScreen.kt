@@ -1,4 +1,4 @@
-package com.horror.scarystory.componenet
+package com.horror.scarystory.componenet.Screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -11,6 +11,10 @@ import androidx.compose.ui.res.painterResource
 import com.horror.scarystory.R
 import com.horror.scarystory.Store.LocalRouterState
 import com.horror.scarystory.Store.navigate
+import com.horror.scarystory.Util.imageDefaultHeight
+import com.horror.scarystory.Util.imageDefaultWidth
+import com.horror.scarystory.componenet.CustomDelay
+import com.horror.scarystory.enum.Route
 
 @Composable
 fun HomeScreen() {
@@ -23,15 +27,15 @@ fun HomeScreen() {
     ) {
         Image(
             modifier = Modifier.requiredSize(
-                com.horror.scarystory.activity.imageWidth,
-                com.horror.scarystory.activity.imageHeight
+                imageDefaultWidth,
+                imageDefaultHeight
             ),
             painter = painterResource(id = R.drawable.main_title),
             contentDescription = "메인 배너"
         )
 
         CustomDelay(delay = 1000) {
-            routeStore.navigate("title")
+            routeStore.navigate(Route.TITLE.code)
         }
     }
 }
