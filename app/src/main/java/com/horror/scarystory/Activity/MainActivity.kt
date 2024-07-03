@@ -3,14 +3,15 @@ package com.horror.scarystory.activity
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import com.horror.scarystory.R
 import com.horror.scarystory.Store.LocalRouterState
 import com.horror.scarystory.Store.LocalStoryStore
+import com.horror.scarystory.Store.back
 import com.horror.scarystory.Store.navigate
 import com.horror.scarystory.activity.ui.theme.ScarystoryTheme
-import com.horror.scarystory.componenet.MainScreen
+import com.horror.scarystory.componenet.Screen.MainScreen
+import com.horror.scarystory.enum.Route
 
 class MainActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,26 +27,11 @@ class MainActivity: BaseActivity() {
             ScarystoryTheme {
                 MainScreen()
 
-                BackHandler(
-                    enabled = true
-                ) {
-                    when(route.value) {
-                        "title" -> {
-                            finish()
-                        }
-                        "setting" -> {
-                            routeStore.navigate("title")
-                        }
-                        "story" -> {
-                            routeStore.navigate("title")
-                        }
-                    }
+                BackHandler(enabled = true) {
+                    routeStore.back(route.value) { finish() }
                 }
             }
         }
     }
 
 }
-
-val imageWidth = 250.dp
-val imageHeight = 220.dp
