@@ -7,9 +7,10 @@ plugins {
     id "kotlin-parcelize"
 }
 
+def properties = new Properties()
+properties.load(project.rootProject.file('common.properties').newDataInputStream())
+
 android {
-
-
     namespace 'com.horror.scarystory'
     compileSdk 34
 
@@ -24,6 +25,12 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "AD_BANNER_ID", properties['AD_BANNER_ID']
+        buildConfigField "String", "AD_FULL_HIGH_ID", properties['AD_FULL_HIGH_ID']
+        buildConfigField "String", "AD_FULL_MEDIUM_ID", properties['AD_FULL_MEDIUM_ID']
+        buildConfigField "String", "AD_FULL_ROW_ID", properties['AD_FULL_ROW_ID']
+        buildConfigField "String", "AD_REWORD_ID", properties['AD_REWORD_ID']
     }
 
     buildTypes {
@@ -46,8 +53,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding true
-        compose true
+        buildConfig = true
     }
     packaging {
         resources {
