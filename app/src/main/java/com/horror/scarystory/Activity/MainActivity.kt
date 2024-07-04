@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.ui.unit.dp
+import com.horror.scarystory.AdRequestService
 import com.horror.scarystory.R
 import com.horror.scarystory.Store.LocalRouterState
 import com.horror.scarystory.Store.LocalStoryStore
@@ -16,6 +17,9 @@ import com.horror.scarystory.enum.Route
 class MainActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        AdRequestService.initialize(this)
+
         setContent {
             val storyStore = LocalStoryStore.current
             val routeStore = LocalRouterState.current

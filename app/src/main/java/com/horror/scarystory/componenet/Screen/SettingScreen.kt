@@ -55,14 +55,16 @@ fun SettingScreen() {
             Column {
                 Spacer(modifier = Modifier.height(10.dp))
                 SettingText(text = "폰트 설정", color = settingColor)
-                SettingText(text = "글자 크기", fontSize = 20)
-//                SettingText(text = "줄 간격", fontSize = 20)
+                SettingText(text = "폰트", fontSize = 20)
                 Row {
                     fontList.map {
                         Column(
                             Modifier
                                 .size(75.dp, 30.dp)
-                                .border(width = 2.dp, shape = RectangleShape, color = if (it.second == fontFamily.value) colorWhite else Color.Gray),
+                                .border(width = 2.dp, shape = RectangleShape, color = if (it.second == fontFamily.value) colorWhite else Color.Gray)
+                                .clickable {
+                                    fontFamily.value = it.second
+                                },
                             Arrangement.Center,
                             Alignment.CenterHorizontally
                         ) {
@@ -70,6 +72,7 @@ fun SettingScreen() {
                         }
                     }
                 }
+                SettingText(text = "글자 크기", fontSize = 20)
                 Spacer(modifier = Modifier.height(10.dp))
                 Divider(color = Color.White, startIndent = 3.dp)
                 Spacer(modifier = Modifier.height(10.dp))

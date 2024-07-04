@@ -31,6 +31,7 @@ android {
         buildConfigField "String", "AD_FULL_MEDIUM_ID", properties['AD_FULL_MEDIUM_ID']
         buildConfigField "String", "AD_FULL_ROW_ID", properties['AD_FULL_ROW_ID']
         buildConfigField "String", "AD_REWORD_ID", properties['AD_REWORD_ID']
+        buildConfigField "String", "AD_OPEN_ID", properties['AD_OPEN_ID']
     }
 
     buildTypes {
@@ -63,7 +64,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation 'com.google.android.material:material:1.6.1'

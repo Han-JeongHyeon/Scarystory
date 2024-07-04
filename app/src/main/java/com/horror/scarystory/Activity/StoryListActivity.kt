@@ -49,8 +49,6 @@ import com.horror.scarystory.R
 import com.horror.scarystory.Util.topBarHeight
 import com.horror.scarystory.componenet.TouchScrollBox
 import com.horror.scarystory.activity.ui.theme.ScarystoryTheme
-import com.horror.scarystory.componenet.BannerAd
-import com.horror.scarystory.componenet.CustomTopBar
 import com.horror.scarystory.componenet.Word
 
 class StoryListActivity : BaseActivity() {
@@ -104,10 +102,6 @@ class StoryListActivity : BaseActivity() {
                         }
                     }
                 }
-
-                CustomTopBar()
-
-                BannerAd()
 
             }
         }
