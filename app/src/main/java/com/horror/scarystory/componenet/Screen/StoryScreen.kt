@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -26,10 +27,16 @@ fun StoryScreen() {
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Column() {
+            Column(
+                modifier = Modifier.weight(0.2f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 Text("대충 제목")
             }
-            Column {
+            Column(
+                modifier = Modifier.weight(0.8f),
+            ) {
                 Text("대충 내용")
             }
         }
@@ -47,6 +54,8 @@ fun StoryScreen() {
             contentDescription = "",
             contentScale = ContentScale.Crop
         )
+
+
 
     }
 

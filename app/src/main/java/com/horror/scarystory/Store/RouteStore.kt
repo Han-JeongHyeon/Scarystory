@@ -28,12 +28,3 @@ fun RouteStore.back(route: String, finish: () -> Unit) {
     queueRoute.removeLast()
     currentRoute.value = queueRoute.lastOrNull() ?: return finish()
 }
-
-fun MutableState<String>.showScreen() {
-    when (this.value) {
-        Route.HOME.code -> HomeScreen()
-        Route.TITLE.code -> TitleScreen()
-        Route.SETTING.code -> SettingScreen()
-        Route.STORY.code -> StoryScreen()
-    }
-}

@@ -37,7 +37,12 @@ fun MainScreen() {
         )
         Column {
             CustomTopBar()
-            route.showScreen()
+            when (route.value) {
+                Route.HOME.code -> HomeScreen()
+                Route.TITLE.code -> TitleScreen()
+                Route.SETTING.code -> SettingScreen()
+                Route.STORY.code -> StoryScreen()
+            }
             if (route.value != Route.HOME.code) {
                 BannerAd()
             }
