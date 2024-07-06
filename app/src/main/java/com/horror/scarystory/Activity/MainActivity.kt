@@ -10,6 +10,7 @@ import com.horror.scarystory.Store.LocalRouterState
 import com.horror.scarystory.Store.LocalStoryStore
 import com.horror.scarystory.Store.back
 import com.horror.scarystory.Store.navigate
+import com.horror.scarystory.Toast
 import com.horror.scarystory.activity.ui.theme.ScarystoryTheme
 import com.horror.scarystory.componenet.Screen.MainScreen
 import com.horror.scarystory.enum.Route
@@ -19,6 +20,7 @@ class MainActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
 
         AdRequestService.initialize(this)
+        Toast.initialize(baseContext)
 
         setContent {
             val storyStore = LocalStoryStore.current
@@ -32,7 +34,7 @@ class MainActivity: BaseActivity() {
                 MainScreen()
 
                 BackHandler(enabled = true) {
-                    routeStore.back(route.value) { finish() }
+                    routeStore.back { finish() }
                 }
             }
         }

@@ -29,7 +29,9 @@ fun TitleTopBar() {
             modifier = Modifier
                 .width(40.dp)
                 .fillMaxHeight()
-                .clickable { },
+                .clickable {
+                           // 사이드 바
+                },
             imageVector = Icons.Default.Menu,
             contentDescription = "메뉴",
             tint = colorWhite
@@ -47,7 +49,9 @@ fun TitleTopBar() {
                 Icon(
                     modifier = Modifier
                         .size(25.dp, 25.dp)
-                        .clickable { },
+                        .clickable {
+                                   // dialog
+                        },
                     imageVector = ImageVector.vectorResource(id = R.drawable.circle_outline),
                     contentDescription = "해석권",
                     tint = colorWhite

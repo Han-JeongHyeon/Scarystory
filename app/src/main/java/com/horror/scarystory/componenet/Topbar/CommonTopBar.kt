@@ -29,7 +29,7 @@ fun CommonTopBar(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            content
+            content()
         }
     }
 }

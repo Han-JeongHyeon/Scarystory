@@ -23,6 +23,7 @@ import com.horror.scarystory.Store.LocalStoryStore
 import com.horror.scarystory.Store.navigate
 import com.horror.scarystory.Util.topBarHeight
 import com.horror.scarystory.componenet.Word
+import com.horror.scarystory.enum.Route
 
 @Composable
 fun TitleScreen() {
@@ -46,7 +47,7 @@ fun TitleScreen() {
                         Column(
                             horizontalAlignment = Alignment.Start,
                             modifier = Modifier.clickable {
-                                routeStore.navigate("story")
+                                routeStore.navigate(Route.STORY.code)
                             }
                         ) {
                             Spacer(modifier = Modifier.height(4.dp))

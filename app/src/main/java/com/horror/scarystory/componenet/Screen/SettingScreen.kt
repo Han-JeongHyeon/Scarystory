@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -56,22 +57,34 @@ fun SettingScreen() {
                 Spacer(modifier = Modifier.height(10.dp))
                 SettingText(text = "폰트 설정", color = settingColor)
                 SettingText(text = "폰트", fontSize = 20)
-                Row {
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(modifier = Modifier.fillMaxWidth().height(30.dp)) {
                     fontList.map {
                         Column(
-                            Modifier
-                                .size(75.dp, 30.dp)
-                                .border(width = 2.dp, shape = RectangleShape, color = if (it.second == fontFamily.value) colorWhite else Color.Gray)
-                                .clickable {
-                                    fontFamily.value = it.second
-                                },
+                            modifier = Modifier.weight(0.25f).fillMaxSize(),
                             Arrangement.Center,
                             Alignment.CenterHorizontally
                         ) {
-                            SettingText(text = it.first)
+                            Column(
+                                Modifier
+                                    .size(75.dp, 30.dp)
+                                    .border(
+                                        width = 2.dp,
+                                        shape = RectangleShape,
+                                        color = if (it.second == fontFamily.value) colorWhite else Color.Gray
+                                    )
+                                    .clickable {
+                                        fontFamily.value = it.second
+                                    },
+                                Arrangement.Center,
+                                Alignment.CenterHorizontally
+                            ) {
+                                SettingText(text = it.first)
+                            }
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(10.dp))
                 SettingText(text = "글자 크기", fontSize = 20)
                 Spacer(modifier = Modifier.height(10.dp))
                 Divider(color = Color.White, startIndent = 3.dp)

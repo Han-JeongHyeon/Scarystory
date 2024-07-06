@@ -28,17 +28,19 @@ fun StoryScreen() {
                 .padding(8.dp)
         ) {
             Column(
-                modifier = Modifier.weight(0.2f),
+                modifier = Modifier.weight(0.1f).fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text("대충 제목")
             }
             Column(
-                modifier = Modifier.weight(0.8f),
+                modifier = Modifier.weight(0.9f),
             ) {
                 Text("대충 내용")
             }
+
+            // 공유, 다음 이전 글 버튼
         }
 
         Image(
