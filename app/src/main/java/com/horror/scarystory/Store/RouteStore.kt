@@ -5,6 +5,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import com.horror.scarystory.Toast
+import com.horror.scarystory.Toast.Companion.showToast
 import com.horror.scarystory.enum.Route
 
 var backPressTime = 0L
@@ -26,11 +27,10 @@ fun RouteStore.back(finish: () -> Unit) {
     val currentTime = System.currentTimeMillis()
     if (queueRoute.isNotEmpty()) queueRoute.removeLast()
     currentRoute.value = queueRoute.lastOrNull() ?:
-        if (currentTime - backPressTime < 2500) {
-            return finish()
+        return if (currentTime - backPressTime < 2500) {
+            finish()
         } else {
             backPressTime = System.currentTimeMillis()
-            Toast().show("'뒤로가기'를 버튼을 한번 더 눌러주세요", 0)
-            return
+            showToast("'뒤로가기'를 버튼을 한번 더 눌러주세요", Toast.LENGTH_SHORT)
         }
 }

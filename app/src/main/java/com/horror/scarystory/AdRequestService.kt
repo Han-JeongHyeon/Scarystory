@@ -3,7 +3,7 @@ package com.horror.scarystory
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
+import com.horror.scarystory.Toast.Companion.showToast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.*
@@ -15,10 +15,9 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ticker
 
-private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
 class AdRequestService private constructor(private val applicationContext: Context) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val defaultDelay = 1000L
 
     companion object {
         @Volatile
@@ -40,30 +39,26 @@ class AdRequestService private constructor(private val applicationContext: Conte
     fun startAdLoading() {
         coroutineScope.launch {
             while (true) {
-                if (mInterstitialAd == null) {
-                    loadInterstitialAd()
-                }
-                delay(1000 * 90)
-                if (mRewardedAd == null) {
-                    loadRewardedAd()
-                }
-                delay(1000 * 90)
+                loadInterstitialAd()
+                delay(defaultDelay * 20)
+                loadRewardedAd()
+                delay(defaultDelay * 20)
             }
         }
     }
 
     private fun loadRewardedAd() {
+        if (mRewardedAd == null) return
+
         val adRequest = AdRequest.Builder().build()
         RewardedAd.load(
             applicationContext, BuildConfig.AD_REWORD_ID, adRequest, object : RewardedAdLoadCallback() {
                 override fun onAdFailedToLoad(p0: LoadAdError) {
                     mRewardedAd = null
-//                    Logger.warning("FAILED", "$p0")
                 }
 
                 override fun onAdLoaded(p0: RewardedAd) {
                     mRewardedAd = p0
-                    Logger.debug("SUCCESS", "$p0")
                 }
             }
         )
@@ -95,16 +90,17 @@ class AdRequestService private constructor(private val applicationContext: Conte
 
             } catch (e: Exception) {
                 Logger.debug("LOG", "The rewarded ad was not loaded yet")
-                Toast.makeText(showActivity, "광고를 불러오는 중에 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                showToast("광고를 불러오는 중에 오류가 발생했습니다.", Toast.LENGTH_SHORT)
             }
         } else {
-            Toast.makeText(showActivity, "광고가 준비되지 않았습니다.\n나중에 다시 시도 해주세요.", Toast.LENGTH_SHORT).show()
+            showToast("광고가 준비되지 않았습니다.\n나중에 다시 시도 해주세요.", Toast.LENGTH_SHORT)
         }
     }
 
     private fun loadInterstitialAd() {
-        val adRequest = AdRequest.Builder().build()
+        if (mInterstitialAd == null) return
 
+        val adRequest = AdRequest.Builder().build()
         InterstitialAd.load(applicationContext,
             BuildConfig.AD_FULL_HIGH_ID,
             adRequest,
@@ -126,16 +122,6 @@ class AdRequestService private constructor(private val applicationContext: Conte
             mInterstitialAd!!.show(showActivity!!)
             mInterstitialAd = null
             PrefKey(applicationContext).putInt("count", 0)
-        }
-    }
-
-}
-
-fun main() {
-    val tickerChannel = ticker(delayMillis = 1000, initialDelayMillis = 0)
-    coroutineScope.launch {
-        for (event in tickerChannel) {
-            println("AAAA")
         }
     }
 }
