@@ -1,32 +1,30 @@
 package com.horror.scarystory.componenet
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import com.horror.scarystory.R
+import com.horror.scarystory.Store.toFontFamily
 import com.horror.scarystory.Util.colorWhite
 
 @Composable
-fun SettingText(
+fun Text(
     text: String,
-    fontSize: Int = 12,
+    fontSize: Float = 12f,
     color: Color = colorWhite,
+    font: Int = R.font.bitro,
+    textAlign: TextAlign = TextAlign.Left
 ) {
     Text(
-        textAlign = TextAlign.Left,
+        textAlign = textAlign,
         text = buildAnnotatedString {
-        withStyle(style = SpanStyle(fontSize = fontSize.sp, fontFamily = FontFamily(Font(R.font.bitro)))) {
-            append(text)
-        }
-    }, color = color)
+            withStyle(style = SpanStyle(fontSize = fontSize.sp, fontFamily = font.toFontFamily())) {
+                append(text)
+            }
+        }, color = color)
 }

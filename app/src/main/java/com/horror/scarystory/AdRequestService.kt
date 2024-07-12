@@ -16,13 +16,14 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ticker
 
 class AdRequestService private constructor(private val applicationContext: Context) {
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    private val defaultDelay = 1000L
 
     companion object {
         @Volatile
         private var INSTANCE: AdRequestService? = null
         private var showActivity: ComponentActivity? = null
+        private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        private const val defaultDelay = 1000L
+
         var mRewardedAd: RewardedAd? = null
         var mInterstitialAd: InterstitialAd? = null
 
@@ -89,7 +90,6 @@ class AdRequestService private constructor(private val applicationContext: Conte
 //                })
 
             } catch (e: Exception) {
-                Logger.debug("LOG", "The rewarded ad was not loaded yet")
                 showToast("광고를 불러오는 중에 오류가 발생했습니다.", Toast.LENGTH_SHORT)
             }
         } else {
@@ -106,12 +106,10 @@ class AdRequestService private constructor(private val applicationContext: Conte
             adRequest,
             object : InterstitialAdLoadCallback() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Logger.debug("광고", "광고 준비 X")
                     mInterstitialAd = null
                 }
 
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Logger.debug("광고", "광고 준비 O")
                     mInterstitialAd = interstitialAd
                 }
             })

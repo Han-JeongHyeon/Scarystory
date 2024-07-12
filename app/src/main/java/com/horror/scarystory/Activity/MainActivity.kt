@@ -14,19 +14,27 @@ import com.horror.scarystory.Toast
 import com.horror.scarystory.activity.ui.theme.ScarystoryTheme
 import com.horror.scarystory.componenet.Screen.MainScreen
 import com.horror.scarystory.enum.Route
+import com.horror.scarystory.service.MusicApplication
 
 class MainActivity: BaseActivity() {
+
+    companion object {
+        var musicApplication = MusicApplication()
+        val adRequestService by lazy { AdRequestService.getInstance() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         AdRequestService.initialize(this)
+        adRequestService.startAdLoading()
+
         Toast.initialize(baseContext)
 
         setContent {
             val storyStore = LocalStoryStore.current
             val routeStore = LocalRouterState.current
 
-            val route = routeStore.currentRoute
             val storyList = storyStore.stores
             storyList.value = resources.getStringArray(R.array.name).toList()
 
