@@ -15,6 +15,7 @@ import com.horror.scarystory.R
 import com.horror.scarystory.Store.LocalSettingStore
 import com.horror.scarystory.Store.toFontFamily
 import com.horror.scarystory.Util.colorWhite
+import com.horror.scarystory.activity.MainActivity
 import com.horror.scarystory.componenet.Text
 
 @Composable

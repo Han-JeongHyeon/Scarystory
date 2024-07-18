@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.horror.scarystory.R
 
 data class SettingStore(
-    val font: MutableState<Int> = mutableIntStateOf(R.font.yoondokrip),
+    var font: MutableState<Int> = mutableIntStateOf(R.font.yoondokrip),
     val fontSize: MutableState<Float> = mutableFloatStateOf(22F),
     val isMusicUseYN: MutableState<Boolean> = mutableStateOf(false)
 )

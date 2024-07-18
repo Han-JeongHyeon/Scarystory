@@ -31,6 +31,6 @@ fun RouteStore.back(finish: () -> Unit) {
             finish()
         } else {
             backPressTime = System.currentTimeMillis()
-            showToast("'뒤로가기'를 버튼을 한번 더 눌러주세요", Toast.LENGTH_SHORT)
+            showToast("'뒤로가기'를 한번 더 눌러주세요", Toast.LENGTH_SHORT)
         }
 }
