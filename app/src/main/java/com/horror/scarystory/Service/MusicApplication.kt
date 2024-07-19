@@ -20,16 +20,13 @@ class MusicApplication : Application() {
     private fun initializeMediaPlayer() {
         mediaPlayer = MediaPlayer.create(this, R.raw.fuscia).apply {
             setOnCompletionListener {
-                Log.d("TAG", "MediaPlayer completed")
                 releaseMediaPlayer()
             }
             setOnErrorListener { _, what, extra ->
-                Log.e("TAG", "MediaPlayer error: what=$what, extra=$extra")
                 releaseMediaPlayer()
                 true
             }
         }
-        Log.d("TAG", "MediaPlayer initialized: $mediaPlayer")
     }
 
     fun start() {
@@ -37,7 +34,6 @@ class MusicApplication : Application() {
             if (!it.isPlaying) {
                 it.isLooping = true
                 it.start()
-                Log.d("TAG", "MediaPlayer started")
             }
         }
     }
@@ -46,17 +42,14 @@ class MusicApplication : Application() {
         mediaPlayer?.let {
             if (it.isPlaying) {
                 it.stop()
-                Log.d("TAG", "MediaPlayer stopped")
-                // Prepare the MediaPlayer for the next start
                 it.prepare()
             }
         }
     }
 
-    fun releaseMediaPlayer() {
+    private fun releaseMediaPlayer() {
         mediaPlayer?.release()
         mediaPlayer = null
-        Log.d("TAG", "MediaPlayer released")
     }
 
     override fun onTerminate() {

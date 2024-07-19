@@ -1,11 +1,8 @@
 package com.horror.scarystory
 
-import android.app.Application
 import android.content.Context
-import android.util.Log
 import com.horror.scarystory.Toast.Companion.showToast
 import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -13,7 +10,6 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ticker
 
 class AdRequestService private constructor(private val applicationContext: Context) {
 

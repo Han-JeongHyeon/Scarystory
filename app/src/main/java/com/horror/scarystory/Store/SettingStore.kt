@@ -10,7 +10,8 @@ import com.horror.scarystory.R
 data class SettingStore(
     var font: MutableState<Int> = mutableIntStateOf(R.font.yoondokrip),
     val fontSize: MutableState<Float> = mutableFloatStateOf(22F),
-    val isMusicUseYN: MutableState<Boolean> = mutableStateOf(false)
+    val isMusicUseYN: MutableState<Boolean> = mutableStateOf(false),
+    val interpretTicket: MutableState<Int> = mutableIntStateOf(10),
 )
 
 val LocalSettingStore = compositionLocalOf { SettingStore() }

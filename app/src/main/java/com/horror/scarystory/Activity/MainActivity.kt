@@ -5,43 +5,27 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.ui.unit.dp
-import com.horror.scarystory.AdRequestService
+import com.horror.scarystory.*
 import com.horror.scarystory.DB.DatabaseBuilder
+import com.horror.scarystory.DB.Entity.Story
 import com.horror.scarystory.DB.Entity.User
 import com.horror.scarystory.DB.UserDatabase
-import com.horror.scarystory.R
 import com.horror.scarystory.Store.*
-import com.horror.scarystory.Toast
 import com.horror.scarystory.activity.ui.theme.ScarystoryTheme
 import com.horror.scarystory.componenet.Screen.MainScreen
 import com.horror.scarystory.enum.Route
 import com.horror.scarystory.service.MusicApplication
+import java.util.*
 
 class MainActivity: BaseActivity() {
 
     companion object {
         var musicApplication = MusicApplication()
         val adRequestService by lazy { AdRequestService.getInstance() }
-        val userDatabase: UserDatabase by lazy { getInstance() }
-
-        private fun databaseInitialize(context: Context) {
-            MainActivity().baseContext
-            if (userDatabase == null) {
-                userDatabase = DatabaseBuilder.getInstance(context, UserDatabase::class.java, "userDatabase")
-            }
-        }
-
-        private fun getInstance(): UserDatabase {
-            return userDatabase ?: throw IllegalStateException("AdRequestService must be initialized")
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        databaseInitialize(this)
-
-        val userDatabase = DatabaseBuilder.getInstance(baseContext, UserDatabase::class.java, "userDatabase")
 
         AdRequestService.initialize(this)
         adRequestService.startAdLoading()
@@ -71,9 +55,40 @@ class MainActivity: BaseActivity() {
 }
 
 fun initializeStore(
-    settingStore: SettingStore
+    settingStore: SettingStore,
+    storyStore: StoryStore,
 ) {
-    val userDatabase = MainActivity.userDatabase.userDB()
+    val userDatabase = DatabaseManager.userDatabase.useDB()
+    val getUserData = userDatabase.getAll()
+    val storyDatabase = DatabaseManager.storyDatabase.useDB()
+    val getStoryData = storyDatabase.getAll()
 
-    settingStore.font.value = userDatabase.getAll().FONT_STYLE
+    if (getUserData == null) {
+        val UUID = UUID.randomUUID()
+        userDatabase.updateUser(
+            User(
+                USER_ID = UUID,
+                NAME = UUID.toString(),
+                FONT_STYLE = settingStore.font.value,
+                FONT_SIZE = settingStore.fontSize.value,
+                MUSIC_FG = settingStore.isMusicUseYN.value,
+                INTERPRET_TICKET = settingStore.interpretTicket.value,
+            )
+        )
+    } else {
+        settingStore.apply {
+            font.value = getUserData.FONT_STYLE
+            fontSize.value = getUserData.FONT_SIZE
+            isMusicUseYN.value = getUserData.MUSIC_FG
+            interpretTicket.value = getUserData.INTERPRET_TICKET
+        }
+    }
+
+    getStoryData.forEach {
+        it.toDto()
+//        storyStore.sstores[it.ID].apply {
+//            it.copy()
+//        }
+    }
+
 }

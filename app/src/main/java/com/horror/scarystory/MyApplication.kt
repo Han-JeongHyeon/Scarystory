@@ -25,8 +25,17 @@ class MyApplication :
     private lateinit var appOpenAdManager: AppOpenAdManager
     private var currentActivity: Activity? = null
 
+    init {
+        instance = this
+    }
+
     companion object {
+        private var instance: MyApplication? = null
         var mediaPlayer: MediaPlayer? = null
+
+        fun applicationContext(): Context {
+            return instance!!.applicationContext
+        }
     }
 
     override fun onCreate() {
