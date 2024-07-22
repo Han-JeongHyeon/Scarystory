@@ -2,6 +2,7 @@ package com.horror.scarystory.activity
 
 import android.content.Context
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.ui.unit.dp
@@ -9,38 +10,60 @@ import com.horror.scarystory.*
 import com.horror.scarystory.DB.DatabaseBuilder
 import com.horror.scarystory.DB.Entity.Story
 import com.horror.scarystory.DB.Entity.User
+import com.horror.scarystory.DB.MongoDB.MongoDBClient
 import com.horror.scarystory.DB.UserDatabase
+import com.horror.scarystory.Dto.StoryDto
 import com.horror.scarystory.Store.*
+import com.horror.scarystory.Story.story0
+import com.horror.scarystory.Story.story1
+import com.horror.scarystory.Story.story2
 import com.horror.scarystory.activity.ui.theme.ScarystoryTheme
 import com.horror.scarystory.componenet.Screen.MainScreen
+import com.horror.scarystory.enum.Database
 import com.horror.scarystory.enum.Route
 import com.horror.scarystory.service.MusicApplication
+import com.mongodb.client.MongoCollection
+import org.litote.kmongo.KMongo
+import org.litote.kmongo.getCollection
+import org.litote.kmongo.updateOneById
 import java.util.*
 
 class MainActivity: BaseActivity() {
 
-    companion object {
-        var musicApplication = MusicApplication()
-        val adRequestService by lazy { AdRequestService.getInstance() }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        AdRequestService.initialize(this)
-        adRequestService.startAdLoading()
-
-        Toast.initialize(baseContext)
 
         setContent {
             val storyStore = LocalStoryStore.current
             val routeStore = LocalRouterState.current
-            var settingStore = LocalSettingStore.current
-
-            initializeStore(settingStore)
 
             val storyList = storyStore.stores
             storyList.value = resources.getStringArray(R.array.name).toList()
+
+            // mongoDB insert remove after completion
+            val mongoDBClient = MongoDBClient.getInstance()
+
+            val remoteStory = mongoDBClient.getCollection<StoryDto>(Database.REMOTE_STORY.code)
+            val remoteStoryDB = remoteStory.find().toList().associateBy { it.STORY_ID }.toMap()
+            val remoteViewer = mongoDBClient.getCollection<StoryDto>(Database.REMOTE_VIEWER.code)
+
+            resources.getStringArray(R.array.name).toList().forEachIndexed { index, s ->
+                val value: String = when (index / 100) {
+                    0 -> story0.getStory(index)
+                    1 -> story1.getStory(index % 100)
+                    2 -> story2.getStory(index % 200)
+                    else -> {
+                        "null"
+                    }
+                }
+                remoteStory.insertOne(StoryDto(
+                    STORY_ID = index.toString(),
+                    NAME = s,
+                    CONTENT = value,
+                    TYPE = "1",
+                    CATEGORY = "1",
+                ))
+            }
 
             ScarystoryTheme {
                 MainScreen()
@@ -57,12 +80,25 @@ class MainActivity: BaseActivity() {
 fun initializeStore(
     settingStore: SettingStore,
     storyStore: StoryStore,
+    activity: ComponentActivity,
 ) {
-    val userDatabase = DatabaseManager.userDatabase.useDB()
-    val getUserData = userDatabase.getAll()
-    val storyDatabase = DatabaseManager.storyDatabase.useDB()
-    val getStoryData = storyDatabase.getAll()
+    AdRequestService.initialize(activity)
+    MyApplication.adRequestService.startAdLoading()
 
+    Toast.initialize(activity.baseContext)
+
+    val mongoDBClient = MongoDBClient.getInstance()
+    val remoteStory = mongoDBClient.getCollection<StoryDto>(Database.REMOTE_STORY.code)
+    val remoteStoryDB = remoteStory.find().toList().associateBy { it.STORY_ID }.toMap()
+    val remoteViewer = mongoDBClient.getCollection<StoryDto>(Database.REMOTE_VIEWER.code)
+
+   // 데이터 초기화
+    val userDatabase = DatabaseManager.userDatabase
+    val getUserData = userDatabase.getAll()
+    val storyDatabase = DatabaseManager.storyDatabase
+    val getStoryData = storyDatabase.getAll().associateBy { it.ID }.toMap()
+
+    // User data init
     if (getUserData == null) {
         val UUID = UUID.randomUUID()
         userDatabase.updateUser(
@@ -84,11 +120,12 @@ fun initializeStore(
         }
     }
 
-    getStoryData.forEach {
-        it.toDto()
-//        storyStore.sstores[it.ID].apply {
-//            it.copy()
-//        }
+    // Story data init (remote to local)
+    remoteStoryDB.forEach {
+        val story = getStoryData[it.key] ?: Story(
+            ID = it.key,
+        )
+        storyStore.sstores[it.key] = it.value to story
     }
 
 }

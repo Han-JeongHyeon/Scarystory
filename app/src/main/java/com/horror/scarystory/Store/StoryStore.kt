@@ -7,10 +7,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.horror.scarystory.DB.Entity.Story
 import com.horror.scarystory.Dto.StoryCnt
+import com.horror.scarystory.Dto.StoryDto
 
 data class StoryStore(
     val stores: MutableState<List<String>> = mutableStateOf(listOf()),
-    val sstores: SnapshotStateMap<String, Story> = mutableStateMapOf(),
+    val sstores: SnapshotStateMap<String, Pair<StoryDto, Story>> = mutableStateMapOf(),
     val storyView: SnapshotStateMap<String, StoryCnt> = mutableStateMapOf(),
 )
 

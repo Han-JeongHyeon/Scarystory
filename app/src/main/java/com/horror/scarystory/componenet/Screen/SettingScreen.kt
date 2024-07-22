@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.ads.AdSize
+import com.horror.scarystory.MyApplication
 import com.horror.scarystory.Store.LocalSettingStore
 import com.horror.scarystory.Store.fontList
 import com.horror.scarystory.Util.colorWhite
@@ -43,7 +44,7 @@ fun SettingScreen() {
     val fontSize = settingStore.fontSize
     var isMusicUseYN by settingStore.isMusicUseYN
 
-    val musicApplication = MainActivity.musicApplication
+    val musicApplication = MyApplication.getInstance()
 
     fun music(checked: Boolean) {
         if (checked) musicApplication.start() else musicApplication.stop()
@@ -62,7 +63,7 @@ fun SettingScreen() {
             Column {
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = "폰트 설정", color = settingColor)
-                Text(text = "폰트", fontSize = 20)
+                Text(text = "폰트", fontSize = 20f)
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(modifier = Modifier.fillMaxWidth().height(30.dp)) {
                     fontList.map {
@@ -91,7 +92,7 @@ fun SettingScreen() {
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Text(text = "글자 크기", fontSize = 20)
+                Text(text = "글자 크기", fontSize = 20f)
                 Spacer(modifier = Modifier.height(10.dp))
                 Slider(
                     value = fontSize.value,
@@ -106,7 +107,7 @@ fun SettingScreen() {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "배경음악 사용", fontSize = 20)
+                    Text(text = "배경음악 사용", fontSize = 20f)
                     Row(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Absolute.Right,
@@ -126,7 +127,7 @@ fun SettingScreen() {
                         .clickable { }
                 ) {
                     Spacer(modifier = Modifier.height(10.dp))
-                    Text(text = "업데이트 / 오류 문의", fontSize = 20)
+                    Text(text = "업데이트 / 오류 문의", fontSize = 20f)
                     Spacer(modifier = Modifier.height(10.dp))
                 }
             }

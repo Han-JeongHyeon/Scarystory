@@ -120,4 +120,10 @@ dependencies {
     // Room
     implementation 'androidx.room:room-runtime:2.6.1'
     kapt 'androidx.room:room-compiler:2.6.1'
+
+    // mongoDB
+    implementation("org.litote.kmongo:kmongo:4.4.0")
+
+    // Json Serialize
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 }
