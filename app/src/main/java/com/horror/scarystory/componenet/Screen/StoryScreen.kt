@@ -5,24 +5,44 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.horror.scarystory.DatabaseManager
 import com.horror.scarystory.R
 import com.horror.scarystory.Store.LocalSettingStore
+import com.horror.scarystory.Store.LocalStoryStore
 import com.horror.scarystory.Store.toFontFamily
 import com.horror.scarystory.Util.colorWhite
 import com.horror.scarystory.activity.MainActivity
 import com.horror.scarystory.componenet.Text
+import kotlinx.coroutines.launch
 
 @Composable
 fun StoryScreen() {
+    val scope = rememberCoroutineScope()
+
     val settingStore = LocalSettingStore.current
+    val storyStore = LocalStoryStore.current
+
+    val currentStory = storyStore.currentStory
     val font by settingStore.font
     val fontSize by settingStore.fontSize
+
+    fun storyReadUpdate() {
+        scope.launch {
+            val story = storyStore.sstores[currentStory.value]
+            if (story!!.second.READ_FG) {
+                val data = story.second.copy(READ_FG = true)
+                DatabaseManager.storyDatabase.upsert(data)
+                story.copy(second = data)
+            }
+        }
+    }
 
     Box(
         modifier = Modifier

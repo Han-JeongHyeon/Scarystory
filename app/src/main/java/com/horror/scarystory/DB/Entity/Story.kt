@@ -10,16 +10,4 @@ data class Story (
     var READ_FG: Boolean = false,
     var FAVE_FG: Boolean = false,
     var REC_FG: Boolean = false,
-) {
-//    fun toDto(): StoryDto {
-//        return StoryDto(
-//            ID = ID,
-//            NAME = NAME,
-//            CONTENT = CONTENT,
-//            READ_FG = READ_FG,
-//            FAVE_FG = FAVE_FG,
-//            REC_FG = REC_FG,
-//            TYPE = TYPE,
-//        )
-//    }
-}
+)

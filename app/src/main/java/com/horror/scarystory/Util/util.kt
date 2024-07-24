@@ -4,6 +4,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.ads.AdSize
+import com.horror.scarystory.DB.MongoDB.MongoDBClient
+import com.horror.scarystory.Dto.StoryDto
+import com.horror.scarystory.enum.Database
+import com.mongodb.client.MongoCollection
+import org.litote.kmongo.updateOneById
 
 val defaultColor = Color(0xFF252525)
 val colorWhite = Color.White

@@ -1,25 +1,23 @@
 package com.horror.scarystory.DB.MongoDB
 
+import com.horror.scarystory.Dto.StoryCntDto
 import com.horror.scarystory.Dto.StoryDto
-import com.mongodb.client.MongoClient
+import com.horror.scarystory.enum.Database
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import org.litote.kmongo.KMongo
-import org.litote.kmongo.getCollection
 
 class MongoDBClient private constructor() {
 
     companion object {
+        val remoteStory by lazy{ getCollection<StoryDto>(Database.REMOTE_STORY.code) }
+        val remoteViewer by lazy { getCollection<StoryCntDto>(Database.REMOTE_VIEWER.code) }
+
         private val client = KMongo.createClient()
         val database: MongoDatabase = client.getDatabase("ScaryStory")
-        private var instance: MongoDBClient = MongoDBClient()
 
-        fun getInstance(): MongoDBClient {
-            return instance
+        inline fun <reified T: Any> getCollection(collectionName: String): MongoCollection<T> {
+            return database.getCollection(collectionName, T::class.java)
         }
-    }
-
-    inline fun <reified T: Any> getCollection(collectionName: String): MongoCollection<T> {
-        return database.getCollection(collectionName, T::class.java)
     }
 }
