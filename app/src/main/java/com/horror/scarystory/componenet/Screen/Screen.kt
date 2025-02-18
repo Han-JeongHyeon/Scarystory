@@ -49,6 +49,9 @@ import com.google.android.gms.ads.AdSize
 import com.horror.scarystory.R
 import com.horror.scarystory.Store.*
 import com.horror.scarystory.Util.topBarHeight
+import com.horror.scarystory.activity.MainActivity
+import com.horror.scarystory.activity.initializeStore
+import com.horror.scarystory.activity.ui.theme.ScarystoryTheme
 import com.horror.scarystory.componenet.AD.BannerAd
 import com.horror.scarystory.componenet.Topbar.CustomTopBar
 import com.horror.scarystory.enum.Route

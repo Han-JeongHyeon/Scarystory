@@ -1,27 +1,22 @@
 package com.horror.scarystory.Dto
 
 import com.horror.scarystory.DB.Entity.Story
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import org.bson.types.ObjectId
 
+@Serializable
 data class StoryDto(
-    var ID: String,
+    @SerialName("_id")
+    var ID: ObjectId = ObjectId.get(), // 기본 키 필드,
+    @SerialName("story_id")
+    var STORY_ID: String,
+    @SerialName("name")
     var NAME: String,
+    @SerialName("content")
     var CONTENT: String,
-    var READ_FG: Boolean,
-    var FAVE_FG: Boolean,
-    var REC_FG: Boolean,
-    var TYPE: Boolean,
-    var VIEW_CNT: Int = 0,
-    var REC_CNT: Int = 0,
-) {
-    fun toEntity(): Story {
-         return Story(
-             ID = ID,
-             NAME = NAME,
-             CONTENT = CONTENT,
-             READ_FG = READ_FG,
-             FAVE_FG = FAVE_FG,
-             REC_FG = REC_FG,
-             TYPE = TYPE,
-         )
-    }
-}
+    @SerialName("type")
+    var TYPE: String,
+    @SerialName("category")
+    var CATEGORY: String,
+)

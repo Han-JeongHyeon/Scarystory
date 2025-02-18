@@ -1,16 +1,18 @@
 package com.horror.scarystory
 
-import android.content.Context
 import androidx.room.RoomDatabase
+import com.horror.scarystory.DB.DAO.StoryDAO
+import com.horror.scarystory.DB.DAO.UserDAO
 import com.horror.scarystory.DB.DatabaseBuilder
 import com.horror.scarystory.DB.StoryDatabase
 import com.horror.scarystory.DB.UserDatabase
+import com.horror.scarystory.enum.Database
 
 object DatabaseManager {
-    val userDatabase: UserDatabase by lazy { databaseInitialize(UserDatabase::class.java, "userDatabase") }
-    val storyDatabase: StoryDatabase by lazy { databaseInitialize(StoryDatabase::class.java, "storyDatabase") }
+    val userDatabase: UserDAO by lazy { databaseInitialize<UserDatabase>(Database.LOCAL_USER.code).useDB() }
+    val storyDatabase: StoryDAO by lazy { databaseInitialize<StoryDatabase>(Database.LOCAL_STORY.code).useDB() }
 
-    private fun <T : RoomDatabase> databaseInitialize(dbClass: Class<T>, dbName: String): T {
-        return DatabaseBuilder.getInstance(MyApplication.applicationContext(), dbClass, dbName)
+    private inline fun <reified T : RoomDatabase> databaseInitialize(dbName: String): T {
+        return DatabaseBuilder.getInstance(MyApplication.applicationContext(), T::class.java, dbName)
     }
 }

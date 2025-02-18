@@ -13,6 +13,8 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.appopen.AppOpenAd
+import com.horror.scarystory.DB.MongoDB.MongoDBClient
+import com.horror.scarystory.service.MusicApplication
 import java.util.*
 
 private const val AD_UNIT_ID = BuildConfig.AD_OPEN_ID
@@ -33,8 +35,16 @@ class MyApplication :
         private var instance: MyApplication? = null
         var mediaPlayer: MediaPlayer? = null
 
+//        var musicApplication = MusicApplication()
+        val adRequestService by lazy { AdRequestService.getInstance() }
+        val mongoDBClient by lazy { MongoDBClient.getInstance() }
+
         fun applicationContext(): Context {
             return instance!!.applicationContext
+        }
+
+        fun getInstance(): MyApplication {
+            return instance ?: throw IllegalArgumentException("instance is null error")
         }
     }
 
@@ -46,7 +56,15 @@ class MyApplication :
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         appOpenAdManager = AppOpenAdManager()
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.fuscia)
+        mediaPlayer = MediaPlayer.create(this, R.raw.fuscia).apply {
+            setOnCompletionListener {
+                releaseMediaPlayer()
+            }
+            setOnErrorListener { _, what, extra ->
+                releaseMediaPlayer()
+                true
+            }
+        }
         mediaPlayer?.isLooping = true
     }
 
@@ -244,15 +262,26 @@ class MyApplication :
 
     // 음악 관련 로직
     fun start() {
-        mediaPlayer?.start()
+        mediaPlayer?.let {
+            if (!it.isPlaying) {
+                it.isLooping = true
+                it.start()
+            }
+        }
     }
 
-    fun pause() {
-        mediaPlayer?.pause()
+    fun stop() {
+        mediaPlayer?.let {
+            if (it.isPlaying) {
+                it.stop()
+                it.prepare()
+            }
+        }
     }
 
-    fun release() {
+    private fun releaseMediaPlayer() {
         mediaPlayer?.release()
+        mediaPlayer = null
     }
 
 }

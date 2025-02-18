@@ -111,7 +111,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-config:19.1.1'
     implementation 'org.jsoup:jsoup:1.14.3'
 
-    implementation "com.airbnb.android:lottie:5.2.0"
+    // lottie
+    implementation "com.airbnb.android:lottie-compose:5.2.0"
 
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
@@ -120,4 +121,10 @@ dependencies {
     // Room
     implementation 'androidx.room:room-runtime:2.6.1'
     kapt 'androidx.room:room-compiler:2.6.1'
+
+    // mongoDB
+    implementation("org.litote.kmongo:kmongo:4.4.0")
+
+    // Json Serialize
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 }
