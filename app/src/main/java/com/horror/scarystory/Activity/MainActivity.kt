@@ -1,20 +1,17 @@
 package com.horror.scarystory.activity
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.LaunchedEffect
 import com.horror.scarystory.*
-import com.horror.scarystory.DB.DatabaseBuilder
-import com.horror.scarystory.DB.Entity.Story
 import com.horror.scarystory.DB.Entity.User
-import com.horror.scarystory.DB.UserDatabase
 import com.horror.scarystory.Store.*
 import com.horror.scarystory.activity.ui.theme.ScarystoryTheme
 import com.horror.scarystory.componenet.Screen.MainScreen
-import com.horror.scarystory.enum.Route
 import com.horror.scarystory.service.MusicApplication
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
 class MainActivity: BaseActivity() {
@@ -35,12 +32,16 @@ class MainActivity: BaseActivity() {
         setContent {
             val storyStore = LocalStoryStore.current
             val routeStore = LocalRouterState.current
-            var settingStore = LocalSettingStore.current
+            val settingStore = LocalSettingStore.current
 
-            initializeStore(settingStore)
+            LaunchedEffect(Unit) {
+                this.launch(Dispatchers.IO) {
+                    initializeStore(settingStore, storyStore)
 
-            val storyList = storyStore.stores
-            storyList.value = resources.getStringArray(R.array.name).toList()
+                    val storyList = storyStore.stores
+                    storyList.value = resources.getStringArray(R.array.name).toList()
+                }
+            }
 
             ScarystoryTheme {
                 MainScreen()
@@ -54,7 +55,7 @@ class MainActivity: BaseActivity() {
 
 }
 
-fun initializeStore(
+suspend fun initializeStore(
     settingStore: SettingStore,
     storyStore: StoryStore,
 ) {
