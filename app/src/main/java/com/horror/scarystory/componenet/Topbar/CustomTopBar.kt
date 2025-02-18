@@ -47,19 +47,16 @@ import com.horror.scarystory.componenet.Topbar.TitleTopBar
 import com.horror.scarystory.enum.Route
 
 @Composable
-fun CustomTopBar() {
+fun CustomTopBar(
+    onclick: () -> Unit
+) {
     val routeStore = LocalRouterState.current
     val route = routeStore.currentRoute
 
     when(route.value) {
-        Route.TITLE.code -> {
-            TitleTopBar()
-        }
-        Route.SETTING.code -> {
-            SettingTopBar()
-        }
-        else -> {
-
-        }
+        Route.TITLE.code -> TitleTopBar(onclick)
+        Route.SETTING.code -> SettingTopBar()
+        Route.STORY.code -> SettingTopBar()
+        else -> null
     }
 }

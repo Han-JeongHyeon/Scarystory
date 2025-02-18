@@ -25,12 +25,14 @@ fun RouteStore.navigate(route: String) {
 
 fun RouteStore.back(finish: () -> Unit) {
     val currentTime = System.currentTimeMillis()
-    if (queueRoute.isNotEmpty()) queueRoute.removeLast()
-    currentRoute.value = queueRoute.lastOrNull() ?:
+    if (currentRoute.value == Route.TITLE.code) {
         return if (currentTime - backPressTime < 2500) {
             finish()
         } else {
             backPressTime = System.currentTimeMillis()
             showToast("'뒤로가기'를 한번 더 눌러주세요", Toast.LENGTH_SHORT)
         }
+    }
+    if (queueRoute.isNotEmpty()) queueRoute.removeLast()
+    currentRoute.value = queueRoute.lastOrNull() ?: Route.TITLE.code
 }

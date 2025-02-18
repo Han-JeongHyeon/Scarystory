@@ -1,5 +1,6 @@
 package com.horror.scarystory.componenet.Screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.Slider
+import androidx.compose.material.SliderColors
+import androidx.compose.material.SliderDefaults
 import androidx.compose.material.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,7 +42,7 @@ fun SettingScreen() {
     val maxHeight = LocalConfiguration.current.screenHeightDp
     val height = maxHeight.dp - AdSize.FULL_BANNER.height.dp - topBarHeight
     val settingStore = LocalSettingStore.current
-    val fontFamily = settingStore.font
+    val font = settingStore.font
     val fontSize = settingStore.fontSize
     var isMusicUseYN by settingStore.isMusicUseYN
 
@@ -58,16 +61,22 @@ fun SettingScreen() {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(10.dp))
-            Column {
+            Column(
+                Modifier.padding(10.dp)
+            ) {
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = "폰트 설정", color = settingColor)
-                Text(text = "폰트", fontSize = 20)
                 Spacer(modifier = Modifier.height(10.dp))
-                Row(modifier = Modifier.fillMaxWidth().height(30.dp)) {
+                Text(text = "폰트", fontSize = 20f)
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(30.dp)) {
                     fontList.map {
                         Column(
-                            modifier = Modifier.weight(0.25f).fillMaxSize(),
+                            modifier = Modifier
+                                .weight(0.25f)
+                                .fillMaxSize(),
                             Arrangement.Center,
                             Alignment.CenterHorizontally
                         ) {
@@ -77,10 +86,10 @@ fun SettingScreen() {
                                     .border(
                                         width = 2.dp,
                                         shape = RectangleShape,
-                                        color = if (it.second == fontFamily.value) colorWhite else Color.Gray
+                                        color = if (it.second == font.value) colorWhite else Color.Gray
                                     )
                                     .clickable {
-                                        fontFamily.value = it.second
+                                        font.value = it.second
                                     },
                                 Arrangement.Center,
                                 Alignment.CenterHorizontally
@@ -91,14 +100,23 @@ fun SettingScreen() {
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Text(text = "글자 크기", fontSize = 20)
-                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = "글자 크기", fontSize = 20f)
                 Slider(
                     value = fontSize.value,
                     onValueChange = { fontSize.value = it },
-                    valueRange = 0f..100f,
-                    modifier = Modifier.fillMaxWidth()
+                    valueRange = 12f..26f,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = SliderDefaults.colors(
+                        thumbColor = Color.White,
+                        activeTrackColor = Color.White,
+                        inactiveTrackColor = Color.Gray
+                    )
                 )
+                Column(
+                    Modifier.background(Color(0x66888888)).padding(10.dp).fillMaxWidth().height(40.dp)
+                ) {
+                    Text(text = "괴담.... 이무이 앱", fontSize = fontSize.value, font = font.value)
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 Divider(color = Color.White, startIndent = 3.dp)
                 Spacer(modifier = Modifier.height(10.dp))
@@ -106,7 +124,7 @@ fun SettingScreen() {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "배경음악 사용", fontSize = 20)
+                    Text(text = "배경음악 사용", fontSize = 20f)
                     Row(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Absolute.Right,
@@ -126,7 +144,7 @@ fun SettingScreen() {
                         .clickable { }
                 ) {
                     Spacer(modifier = Modifier.height(10.dp))
-                    Text(text = "업데이트 / 오류 문의", fontSize = 20)
+                    Text(text = "업데이트 / 오류 문의", fontSize = 20f)
                     Spacer(modifier = Modifier.height(10.dp))
                 }
             }
